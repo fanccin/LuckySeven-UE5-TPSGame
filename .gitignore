@@ -73,3 +73,11 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+*.pdb
+*.ilk
+*.exp
+.livecoding/
+*.lock
+.DS_Store
+Thumbs.db
