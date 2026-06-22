@@ -2,47 +2,60 @@
 
 UMoveActorComponent::UMoveActorComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
-	
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void UMoveActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	Owner = GetOwner();
-	StartLocation = Owner->GetActorLocation();
+	if (Owner)
+	{
+		StartLocation = Owner->GetActorLocation();	
+	}
+	
+	OppositeDirection();
 }
 
 void UMoveActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+
+void UMoveActorComponent::OppositeDirection()
+{
+	if (bOppositeDirection)
+	{
+		LocationSpeed *= -1;
+	}
+}
+ 
+void UMoveActorComponent::Move(float DeltaTime)
+{
+	if (!Owner)
+	{
+		return;
+	}
 	
-	if (LeftFirst)
+	FVector NewLocation;
+	
+	if (bMoveLeftRight)
 	{
-		MoveLeftRight(DeltaTime);
+		NewLocation = FVector(LocationSpeed*DeltaTime,0.f,0.f);
 	}
-	if (UpFirst)
+	else if (bMoveUpDown)
 	{
-		MoveUpDown(DeltaTime);
+		NewLocation = FVector(0.f,0.f,LocationSpeed*DeltaTime);
 	}
-}
-
-void UMoveActorComponent::MoveLeftRight(float DeltaTime)
-{
-	if (Owner)
+	
+	Owner->AddActorLocalOffset(NewLocation);
+	EndLocation = Owner->GetActorLocation();
+	Distance = FVector::Dist(StartLocation, EndLocation);
+	
+	if (Distance >= MaxRange)
 	{
-		Owner->AddActorLocalOffset(FVector(LocationSpeed*DeltaTime,0.f,0.f));
-		EndLocation = Owner->GetActorLocation();
-		Distance = FVector::Dist(StartLocation, EndLocation);
-	}
-}
-
-void UMoveActorComponent::MoveUpDown(float DeltaTime)
-{
-	if (Owner)
-	{
-		Owner->AddActorLocalOffset(FVector(0.f,0.f,LocationSpeed*DeltaTime));
-		EndLocation = Owner->GetActorLocation();
-		Distance = FVector::Dist(StartLocation, EndLocation);
+		LocationSpeed *= -1;
+		StartLocation = Owner->GetActorLocation();
 	}
 }
