@@ -13,7 +13,6 @@ class NINJA_API UMoveActorComponent : public UActorComponent
 public:	
 	UMoveActorComponent();
 	
-	void OppositeDirection(); // 이동 방향 반대로 바꾸는 함수
 	void Move(float DeltaTime); // 움직임 구현한 함수
 	
 protected:
@@ -24,9 +23,6 @@ private:
 	float LocationSpeed = 100.f; // 이동 속도
 	UPROPERTY(EditAnywhere, Category = "Item|Properties")
 	float MaxRange = 100.f; // 최대 이동 범위
-	
-	UPROPERTY(EditAnywhere, Category = "Item|Properties")
-	bool bOppositeDirection = false; // 반대 방향으로 변경
 	
 	UPROPERTY(EditAnywhere, Category = "Item|Properties")
 	FVector MoveAxis = FVector(1,0,0); // 이동 입력 축(방향)

@@ -10,16 +10,6 @@ void URotationActorComponent::BeginPlay()
 	Super::BeginPlay();
 	
 	Owner = GetOwner();
-	
-	OppositeDirection();
-}
-
-void URotationActorComponent::OppositeDirection()
-{
-	if (bOppositeDirection)
-	{
-		RotationInput *= -1;
-	}
 }
 
 void URotationActorComponent::Rotation(float DeltaTime)

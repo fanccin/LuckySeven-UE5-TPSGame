@@ -14,16 +14,6 @@ void UMoveActorComponent::BeginPlay()
 	{
 		StartLocation = Owner->GetActorLocation();	// 엑터가 저장됐다면 해당 엑터의 위치 가져옴
 	}
-	
-	OppositeDirection(); // 방향 반대로 할지 체크는 처음 1회만
-}
-
-void UMoveActorComponent::OppositeDirection()
-{
-	if (bOppositeDirection)
-	{
-		MoveAxis *= -1;
-	}
 }
  
 void UMoveActorComponent::Move(float DeltaTime)
