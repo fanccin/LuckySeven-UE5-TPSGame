@@ -7,6 +7,7 @@
 #include "NinjaGameInstance.h"
 
 
+
 ANinjaGameState::ANinjaGameState()
 {
 	SpawnedMonsterCount = 0;
