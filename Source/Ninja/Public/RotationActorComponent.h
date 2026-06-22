@@ -13,9 +13,21 @@ class NINJA_API URotationActorComponent : public UActorComponent
 public:	
 	URotationActorComponent();
 	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void OppositeDirection(); // 회전 방향 반대로 바꾸는 함수
+	void Rotation(float DeltaTime); // 회전 구현한 함수
 
 protected:
 	virtual void BeginPlay() override;
 	
+private:
+	UPROPERTY(EditAnywhere, Category = "Item|Properties")
+	float RotationSpeed = 50.f; // 회전 속도
+	
+	UPROPERTY(EditAnywhere, Category = "Item|Properties")
+	bool bOppositeDirection = false; // 반대 방향으로 변경
+	
+	UPROPERTY(EditAnywhere, Category = "Item|Properties")
+	FRotator RotationInput = FRotator(1,0,0); // 회전 축 입력
+	
+	AActor* Owner = nullptr; // RotationComponent를 소유하고 있는 엑터 가져올 변수
 };
