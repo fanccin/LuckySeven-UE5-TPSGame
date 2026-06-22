@@ -1,17 +1,14 @@
 #include "DefaultActor.h"
-#include "MoveActorComponent.h"
 
 ADefaultActor::ADefaultActor()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	
 	SceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
 	SetRootComponent(SceneComp);
 	
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMeshComp->SetupAttachment(SceneComp);
-
-	MoveComp = CreateDefaultSubobject<UMoveActorComponent>(TEXT("MoveComp"));
 }
 
 void ADefaultActor::BeginPlay()
@@ -24,9 +21,5 @@ void ADefaultActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	if (MoveComp)
-	{
-		MoveComp->Move(DeltaTime);
-	}
 }
 

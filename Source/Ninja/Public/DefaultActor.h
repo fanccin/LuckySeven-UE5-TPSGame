@@ -21,8 +21,6 @@ protected:
 	USceneComponent* SceneComp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item|Components")
 	UStaticMeshComponent* StaticMeshComp;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item|Components")
-	UMoveActorComponent* MoveComp;
 	
 	virtual void BeginPlay() override;
 };

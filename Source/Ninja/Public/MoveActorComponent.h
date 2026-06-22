@@ -40,4 +40,24 @@ private:
 	float Distance = 0.f;
 };
 
+/*
+ < .h에 입력 >
+class UMoveActorComponent; 전방 선언
+
+UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item|Components")
+	UMoveActorComponent* MoveComp;
+	
+ < .cpp에 입력 >
+#include "MoveActorComponent.h"
+
+MoveComp = CreateDefaultSubobject<UMoveActorComponent>(TEXT("MoveComp")); 컴포넌트 부착
+Actor컴포넌트는 SetupAttachment 사용 X
+
+Actor의 Tick함수에 구현
+if (MoveComp)
+	{
+		MoveComp->Move(DeltaTime);
+	}
+ */
+
  
