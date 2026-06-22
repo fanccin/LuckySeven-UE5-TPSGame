@@ -44,10 +44,8 @@ ANinjaCharacter::ANinjaCharacter()
 // Called when the game starts or when spawned
 void ANinjaCharacter::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 }
-
 
 // === About Inputs & Control Actions ===
 // Called to bind functionality to input
