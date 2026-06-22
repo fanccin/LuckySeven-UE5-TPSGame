@@ -1,27 +1,59 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "NinjaMonster.h"
 
-// Sets default values
+#include "NinjaCharacter.h"
+#include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 ANinjaMonster::ANinjaMonster()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-}
-
-// Called when the game starts or when spawned
-void ANinjaMonster::BeginPlay()
-{
-	Super::BeginPlay();
+	PrimaryActorTick.bCanEverTick = false;
 	
+	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
+	SetRootComponent(Scene);
+	
+	DamageCollsion = CreateDefaultSubobject<USphereComponent>(TEXT("DamageCollision"));
+	DamageCollsion->SetCollisionProfileName(TEXT("Trigger"));	
+	DamageCollsion->SetupAttachment(Scene);
+	
+	BlockCollsion = CreateDefaultSubobject<USphereComponent>(TEXT("BlockCollision"));
+	BlockCollsion->SetCollisionProfileName(TEXT("WorldDynamic"));
+
+	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+	SkeletalMesh->SetupAttachment(Scene);
+	
+	DamageCollsion->OnComponentBeginOverlap.AddDynamic(this,&ANinjaMonster::OnMonsterOverLap);
+	
+	Damage = 10.0f;
 }
 
-// Called every frame
-void ANinjaMonster::Tick(float DeltaTime)
+void ANinjaMonster::SetHp(float NewHp)
 {
-	Super::Tick(DeltaTime);
+	HP=FMath::Clamp(NewHp,0.0f,MaxHP);
+	if (HP<0.0f)
+	{
+		OnDead();
+	}
+}
 
+void ANinjaMonster::OnMonsterOverLap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	ANinjaCharacter* Player = Cast<ANinjaCharacter>(OtherActor);
+	if (Player)
+	{
+		UGameplayStatics::ApplyDamage(
+			Player,
+			Damage,
+			nullptr,
+			this,
+			UDamageType::StaticClass()
+			);
+	}
+}
+
+void ANinjaMonster::OnDead()
+{
+	Destroy();
+	//TODO : 몬스터 사망시 설정에 따라 수정
 }
 
