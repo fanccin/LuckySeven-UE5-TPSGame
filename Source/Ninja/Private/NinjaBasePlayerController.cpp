@@ -3,3 +3,5 @@
 
 #include "NinjaBasePlayerController.h"
 
+void ANinjaBasePlayerController::ShowGameHUD(int32 CurrentLevelScore) {
+}

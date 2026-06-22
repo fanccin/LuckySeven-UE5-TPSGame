@@ -15,6 +15,5 @@ class NINJA_API ANinjaBasePlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintCallable, Category = "HUD")
 	virtual void ShowGameHUD(int32 CurrentLevelScore);
 };
