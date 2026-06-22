@@ -9,12 +9,12 @@ void URotationActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Owner = GetOwner();
+	Owner = GetOwner(); // 컴포넌트를 소유하고 있는 엑터를 Owner에 저장
 }
 
 void URotationActorComponent::Rotation(float DeltaTime)
 {
-	if (!Owner)
+	if (!Owner) // 안전 검사
 	{
 		return;
 	}
