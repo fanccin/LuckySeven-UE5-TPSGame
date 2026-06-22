@@ -30,10 +30,9 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "Item|Properties")
 	bool bOppositeDirection = false; // 반대 방향으로 변경
+	
 	UPROPERTY(EditAnywhere, Category = "Item|Properties")
-	bool bMoveLeftRight = false; // true면 좌우로 움직임
-	UPROPERTY(EditAnywhere, Category = "Item|Properties")
-	bool bMoveUpDown = false; // true면 상하로 움직임
+	FVector MoveAxis = FVector(1,0,0); // 이동 입력 축
 	
 	
 	AActor* Owner = nullptr;

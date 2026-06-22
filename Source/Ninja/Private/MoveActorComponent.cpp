@@ -27,7 +27,7 @@ void UMoveActorComponent::OppositeDirection()
 {
 	if (bOppositeDirection)
 	{
-		LocationSpeed *= -1;
+		MoveAxis *= -1;
 	}
 }
  
@@ -38,24 +38,13 @@ void UMoveActorComponent::Move(float DeltaTime)
 		return;
 	}
 	
-	FVector NewLocation;
-	
-	if (bMoveLeftRight)
-	{
-		NewLocation = FVector(LocationSpeed*DeltaTime,0.f,0.f);
-	}
-	else if (bMoveUpDown)
-	{
-		NewLocation = FVector(0.f,0.f,LocationSpeed*DeltaTime);
-	}
-	
-	Owner->AddActorLocalOffset(NewLocation);
+	Owner->AddActorLocalOffset(MoveAxis * LocationSpeed * DeltaTime);
 	EndLocation = Owner->GetActorLocation();
 	Distance = FVector::Dist(StartLocation, EndLocation);
 	
 	if (Distance >= MaxRange)
 	{
-		LocationSpeed *= -1;
+		MoveAxis *= -1;
 		StartLocation = Owner->GetActorLocation();
 	}
 }

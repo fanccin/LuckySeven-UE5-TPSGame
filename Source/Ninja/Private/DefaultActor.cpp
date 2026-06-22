@@ -26,7 +26,7 @@ void ADefaultActor::Tick(float DeltaTime)
 	
 	if (MoveComp)
 	{
-		MoveComp->asd(DeltaTime);
+		MoveComp->Move(DeltaTime);
 	}
 }
 
