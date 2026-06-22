@@ -1,5 +1,10 @@
 #include "NinjaCharacterController.h"
-#include "EnhancedInputSubsystems.h"
+
+#include "EnhancedInputSubsystems.h" // UEnhancedInputLocalPlayerSubsystem, AddMappingContext
+#include "EnhancedInputComponent.h" // UEnhancedInputComponent, BindAction()
+#include "InputActionValue.h" // FInputActionValue
+#include "GameFramework/PlayerController.h" // APlayerController
+#include "Engine/LocalPlayer.h" // ULocalPlayer
 
 ANinjaCharacterController::ANinjaCharacterController()
 	:InputMappingContext(nullptr),
@@ -14,7 +19,7 @@ void ANinjaCharacterController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	
+
 	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
 	{		
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =

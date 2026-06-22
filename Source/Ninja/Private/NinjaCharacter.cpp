@@ -26,6 +26,8 @@ ANinjaCharacter::ANinjaCharacter()
 	CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
 	CameraComp->bUsePawnControlRotation = false;
 	
+	//bUseControllerRotationYaw = true;
+	
 	// = Basic Character Movement =
 	WalkSpeed = 600.0f; // temp value
 	SprintSpeedMultiplier = 1.75f; // temp value
@@ -33,12 +35,10 @@ ANinjaCharacter::ANinjaCharacter()
 	
 	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed; // it's sprint is default
 	
-	
-	//
-	/*
+	// = Stats =	
 	MaxHealth = 100.0f;
 	Health = MaxHealth;
-	 */
+	
 }
 
 // Called when the game starts or when spawned
