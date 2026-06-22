@@ -12,10 +12,12 @@ class NINJA_API UMoveActorComponent : public UActorComponent
 public:	
 	UMoveActorComponent();
 
+	void MoveLeftRight(float DeltaTime);
+	void MoveUpDown(float DeltaTime);
+	
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
 protected:
 	virtual void BeginPlay() override;
-
-public:	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 };

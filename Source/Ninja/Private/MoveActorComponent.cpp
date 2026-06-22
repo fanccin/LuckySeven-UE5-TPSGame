@@ -18,3 +18,12 @@ void UMoveActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	
 }
 
+void UMoveActorComponent::MoveLeftRight(float DeltaTime)
+{
+	
+}
+
+void UMoveActorComponent::MoveUpDown(float DeltaTime)
+{
+	
+}
