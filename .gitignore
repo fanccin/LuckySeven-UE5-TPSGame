@@ -73,3 +73,10 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# IntelliJ project files
+.idea
+.vs
+*.iml
+out
+gen
