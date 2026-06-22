@@ -19,6 +19,7 @@ public:
 	ANinjaGameState();
 	
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Monster")
 	int32 SpawnedMonsterCount;
@@ -30,6 +31,10 @@ public:
 	int32 CurrentLevelScore;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level")
 	TArray<FName> LevelMapNames;
+	UPROPERTY(BlueprintReadOnly)
+	float StartTime;
+	
+	FTimerHandle TimerHandle;
 	
 	UFUNCTION(BlueprintPure, Category = "Score")
 	int32 GetScore() const;
@@ -39,6 +44,8 @@ public:
 	void OnGameOver();
 	UFUNCTION(BlueprintCallable, Category = "Menu")
 	void ShowMainMenu();
+	UFUNCTION(BlueprintPure)
+	float GetElapsedTime() const;
 	
 	void StartLevel();
 	void EndLevel();

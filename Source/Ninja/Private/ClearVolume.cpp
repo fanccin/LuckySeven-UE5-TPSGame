@@ -42,16 +42,16 @@ void AClearVolume::OnItemOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 			ClearTimerHandle, 
 			[this]
 			{
-				// if (ANinjaGameState* NinjaGameState = Cast<ANinjaGameState>(GetWorld()->GetGameState()))
-				// {
-				// 	GEngine->AddOnScreenDebugMessage(
-				// 		-1,     // Key (-1이면 매번 새 메시지)
-				// 		5.f,    // 표시 시간
-				// 		FColor::Green,
-				// 		TEXT("플레이어 목적지 도착!")
-				// 	);
-				// 	NinjaGameState->EndLevel();
-				// }
+				if (ANinjaGameState* NinjaGameState = Cast<ANinjaGameState>(GetWorld()->GetGameState()))
+				{
+					GEngine->AddOnScreenDebugMessage(
+						-1,     // Key (-1이면 매번 새 메시지)
+						5.f,    // 표시 시간
+						FColor::Green,
+						TEXT("플레이어 목적지 도착!")
+					);
+					NinjaGameState->EndLevel();
+				}
 			},
 			0.3f, 
 			false
