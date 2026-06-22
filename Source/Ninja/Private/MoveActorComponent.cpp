@@ -9,18 +9,13 @@ void UMoveActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Owner = GetOwner();
+	Owner = GetOwner(); // 컴포넌트를 소유하고 있는 엑터를 Owner에 저장
 	if (Owner)
 	{
-		StartLocation = Owner->GetActorLocation();	
+		StartLocation = Owner->GetActorLocation();	// 엑터가 저장됐다면 해당 엑터의 위치 가져옴
 	}
 	
-	OppositeDirection();
-}
-
-void UMoveActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	OppositeDirection(); // 방향 반대로 할지 체크는 처음 1회만
 }
 
 void UMoveActorComponent::OppositeDirection()
@@ -33,7 +28,7 @@ void UMoveActorComponent::OppositeDirection()
  
 void UMoveActorComponent::Move(float DeltaTime)
 {
-	if (!Owner)
+	if (!Owner) // 안전검사
 	{
 		return;
 	}
@@ -42,9 +37,9 @@ void UMoveActorComponent::Move(float DeltaTime)
 	EndLocation = Owner->GetActorLocation();
 	Distance = FVector::Dist(StartLocation, EndLocation);
 	
-	if (Distance >= MaxRange)
+	if (Distance >= MaxRange) // 이동거리가 최대 이동 범위에 도달하면
 	{
-		MoveAxis *= -1;
+		MoveAxis *= -1; // 방향 반대로
 		StartLocation = Owner->GetActorLocation();
 	}
 }
