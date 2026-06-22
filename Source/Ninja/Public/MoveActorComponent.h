@@ -18,6 +18,21 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item|Properties")
+	float LocationSpeed = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item|Properties")
+	float MaxRange = 0.f;
+	
 	virtual void BeginPlay() override;
 	
+private:
+	AActor* Owner;
+	
+	FVector StartLocation;
+	FVector EndLocation;
+	
+	float Distance = 0.f;
+	
+	bool LeftFirst = true;
+	bool UpFirst = true;
 };
