@@ -29,8 +29,8 @@ ANinjaCharacter::ANinjaCharacter()
 	//bUseControllerRotationYaw = true;
 	
 	// = Basic Character Movement =
-	WalkSpeed = 600.0f; // temp value
-	SprintSpeedMultiplier = 1.75f; // temp value
+	WalkSpeed = 500.0f; // temp value
+	SprintSpeedMultiplier = 2.0f; // temp value
 	SprintSpeed = WalkSpeed * SprintSpeedMultiplier;
 	
 	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed; // it's sprint is default
