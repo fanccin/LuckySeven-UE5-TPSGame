@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -19,12 +18,12 @@ protected:
 	virtual void BeginPlay() override;
 	
 private:
-	UPROPERTY(EditAnywhere, Category = "Item|Properties")
+	UPROPERTY(EditAnywhere, Category = "Move|Properties")
 	float LocationSpeed = 100.f; // 이동 속도
-	UPROPERTY(EditAnywhere, Category = "Item|Properties")
+	UPROPERTY(EditAnywhere, Category = "Move|Properties")
 	float MaxRange = 100.f; // 최대 이동 범위
 	
-	UPROPERTY(EditAnywhere, Category = "Item|Properties")
+	UPROPERTY(EditAnywhere, Category = "Move|Properties")
 	FVector MoveAxis = FVector(1,0,0); // 이동 입력 축(방향)
 	
 	

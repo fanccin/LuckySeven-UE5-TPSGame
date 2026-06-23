@@ -15,9 +15,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item|Components")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Components")
 	USceneComponent* SceneComp;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item|Components")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Components")
 	UStaticMeshComponent* StaticMeshComp;
 	
 	virtual void BeginPlay() override;
