@@ -39,7 +39,7 @@ private:
  < .h에 입력 >
 class UMoveActorComponent; 전방 선언
 
-UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item|Components")
+UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Move|Components")
 	UMoveActorComponent* MoveComp;
 	
  < .cpp에 입력 >

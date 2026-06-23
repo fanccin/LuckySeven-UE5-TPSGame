@@ -32,7 +32,7 @@ private:
  < .h에 입력 >
 class UTurnActorComponent; 전방 선언
 
-UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item|Components")
+UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Turn|Components")
 	UTurnActorComponent* TurnComp;
 	
  < .cpp에 입력 >
