@@ -3,16 +3,30 @@
 
 #include "NinjaGameInstance.h"
 
+#include "NinjaGameState.h"
+
 UNinjaGameInstance::UNinjaGameInstance() {
-	TotalScore = 0;
 	CurrentLevelIndex = 0;
 }
 
+void UNinjaGameInstance::Init()
+{
+	Super::Init();
+	ANinjaGameState* NinjaGameState = GetWorld()->GetGameState<ANinjaGameState>();
+	for (FName LevelMapName : NinjaGameState->LevelMapNames)
+	{
+		OpenedLevels.Add(LevelMapName == "MenuLevel");
+		ScoresByStage.Add(0);
+	}
+}
+
 void UNinjaGameInstance::AddToScore(const int32 Amount) {
-	TotalScore += Amount;
+	ScoresByStage[CurrentLevelIndex] += Amount;
 }
 
 int32 UNinjaGameInstance::GetTotalScore()
 {
+	int64 TotalScore = 0;
+	for (const int32 ByStage : ScoresByStage) TotalScore += ByStage;
 	return TotalScore;
 }

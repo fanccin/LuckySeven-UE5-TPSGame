@@ -16,14 +16,19 @@ class NINJA_API UNinjaGameInstance : public UGameInstance
 	
 public:
 	UNinjaGameInstance();
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GameData")
-	int32 TotalScore;
+	
+	virtual void Init() override;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GameData")
 	int32 CurrentLevelIndex;
+	UFUNCTION(BlueprintCallable, Category = "GameData")
+	int32 GetTotalScore();
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Level")
+	bool bIsFinalStageCleared;
+	
+	TArray<bool> OpenedLevels;
+	TArray<int32> ScoresByStage;
 	
 	UFUNCTION(BlueprintCallable, Category = "GameData")
 	void AddToScore(int32 Amount);
-	UFUNCTION(BlueprintCallable, Category = "GameData")
-	int32 GetTotalScore();
-	
 };

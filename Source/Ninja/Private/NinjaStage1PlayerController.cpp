@@ -13,9 +13,9 @@ void ANinjaStage1PlayerController::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ANinjaStage1PlayerController::ShowGameHUD(int32 CurrentLevelScore)
+void ANinjaStage1PlayerController::ShowGameHUD(const int32 CurrentLevelScore, const bool bIsNewScore)
 {
-	Super::ShowGameHUD(CurrentLevelScore);
+	Super::ShowGameHUD(CurrentLevelScore, bIsNewScore);
 	
 	if (UGameInstance* GameInstance = GetGameInstance())
 	{
@@ -23,7 +23,7 @@ void ANinjaStage1PlayerController::ShowGameHUD(int32 CurrentLevelScore)
 		{
 			// TODO 신성님 스테이지 종료 HUD 노출 로직 추가 필요
 			// 연속으로 플레이 한 스테이지에서 얻은 총 점수 NinjaGameInstance->GetTotalScore();
-			// 현재 스테이지에서 얻은 점수 파라미터 CurrentLevelScore
+			// 마지막 스테이지 클리어 여부 NinjaGameInstance->bIsFinalStageCleared
 			
 		}
 	}
