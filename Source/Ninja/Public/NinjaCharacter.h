@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+
+
 #include "NinjaCharacter.generated.h"
 
 // class UWidgetComponent;
@@ -13,6 +15,7 @@ class UCharacterMovementComponent;
 
 //
 struct FInputActionValue; // Enhanced Input에서 액션 값을 받을 때 사용하는 구조체
+struct FNinjaCharacterStatData;
 
 UCLASS()
 class NINJA_API ANinjaCharacter : public ACharacter
@@ -20,12 +23,20 @@ class NINJA_API ANinjaCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+	
 	// Sets default values for this character's properties
 	ANinjaCharacter();
+	
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	//
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UDataTable* CharacterStatDataTable;
+	
+	
 	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -49,7 +60,7 @@ protected:
 	void StopWalk(const FInputActionValue& value);
 	
 	UFUNCTION(BlueprintCallable, Category = "Movement")
-	void SetAirControl(float AirControl, float AirControlBoostMultiplier, float AirControlBoostVelocityThreshold, float FallingLateralFriction);
+	void SetAirControl(float NewAirControl, float NewAirControlBoostMultiplier, float NewAirControlBoostVelocityThreshold, float NewFallingLateralFriction);
 	
 	
 	// === Components ===
@@ -73,15 +84,31 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	float SprintSpeed; // SprintSPeed = WalkSpeed * SprintSpeedMultiplier // It's default Speed	
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	// = Jump =
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement/Jump")
 	float JumpForce;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement/Jump")
+	float AirControl;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement/Jump")
+	float AirControlBoostMultiplier;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement/Jump")
+	float AirControlBoostVelocityThreshold;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement/Jump")
+	float FallingLateralFriction;
+	
+	
+	//
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat/Health")
 	float MaxHealth;	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Health")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Stat/Health")
 	float Health;	
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Stat")
+	float AttackDamage;
 
 public:		
 	//virtual void Tick(float DeltaTime) override;
@@ -100,6 +127,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	void SetHealth(float Amount);
 
+	UFUNCTION(BlueprintPure, Category = "Stats")
+	float GetAttackDamage() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+	void SetAttackDamage(float Amount);
+	
+	
 	// === ===
 	virtual float TakeDamage(
 		float DamageAmount,
@@ -110,5 +144,10 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	virtual void OnDeath();	
+	
+	
+private:
+	void Initialize();
+	void InitializeCharacterStatsBasedOnDataTable();
 
 };

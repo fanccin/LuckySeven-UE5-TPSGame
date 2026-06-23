@@ -5,10 +5,12 @@
 #include "GameFramework/SpringArmComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h" 
 #include "NinjaCharacterController.h"
+#include "NinjaCharacterStatData.h"
 #include "NinjaGameState.h"
 
 //#include "NinjaCharacterControllerStage1"
 //#include "NinjaCharacterStatusStage1"
+
 
 // Sets default values
 ANinjaCharacter::ANinjaCharacter()
@@ -16,6 +18,11 @@ ANinjaCharacter::ANinjaCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	
+	Initialize();	
+	
+}
+void ANinjaCharacter::Initialize()
+{
 	MoveComp = GetCharacterMovement();
 	
 	// === Setup ===
@@ -43,16 +50,65 @@ ANinjaCharacter::ANinjaCharacter()
 	Health = MaxHealth;
 	
 	// = Jump
+	JumpForce = 600.0f;
 	MoveComp->JumpZVelocity = JumpForce;
-	// 공중 제어력 설정 (0.0 ~ 1.0 사이, 1.0은 지상과 동일한 제어력)
-	MoveComp->AirControl = 1.0f;
-	// 공중 제어 부스트 배율 설정 (점프 키 유지 시 제어력 증폭)
-	MoveComp->AirControlBoostMultiplier = 2.0f;
-	// 공중 제어 부스트가 발동할 속도 임계값
-	MoveComp->AirControlBoostVelocityThreshold = 25.0f;
-	// 공중 가로 마찰력 (값이 높을수록 공중에서 입력 중지 시 즉시 멈춤)
-	MoveComp->FallingLateralFriction = 0.5f;
 	
+	// 공중 제어력 설정 (0.0 ~ 1.0 사이, 1.0은 지상과 동일한 제어력)
+	AirControl = 1.0f;
+	MoveComp->AirControl = AirControl;
+	
+	// 공중 제어 부스트 배율 설정 (점프 키 유지 시 제어력 증폭)
+	AirControlBoostMultiplier = 2.0f;
+	MoveComp->AirControlBoostMultiplier = AirControlBoostMultiplier;
+	
+	// 공중 제어 부스트가 발동할 속도 임계값
+	AirControlBoostVelocityThreshold = 25.0f;
+	MoveComp->AirControlBoostVelocityThreshold = AirControlBoostVelocityThreshold;
+	
+	// 공중 가로 마찰력 (값이 높을수록 공중에서 입력 중지 시 즉시 멈춤)
+	FallingLateralFriction = 0.5f;
+	MoveComp->FallingLateralFriction = FallingLateralFriction;
+}
+
+
+void ANinjaCharacter::InitializeCharacterStatsBasedOnDataTable()
+{
+	// CharacterStatDataTable->FindRow<>()	
+	// 어차피 스테이지에서 한번씩만 가져오는거라 FindRow 면 충분할텐데 일단 혹시모르니 다 가져오는걸로
+	// 추후 변경	
+	TArray<FNinjaCharacterStatData*> CharacterStatDataArray;
+	static const FString ContenxtString(TEXT("CharacterContext"));
+	CharacterStatDataTable->GetAllRows<FNinjaCharacterStatData>(ContenxtString, CharacterStatDataArray);
+	
+	if (CharacterStatDataArray.IsEmpty())
+		return;
+	
+	for (FNinjaCharacterStatData* Data : CharacterStatDataArray)
+	{
+		// 여기서 현재 Stage스테이지나 캐릭터에 따라서 확인 후 설정			
+		//Data->StageIndex
+		WalkSpeed = Data->WalkSpeed;
+		SprintSpeedMultiplier = Data->SprintSpeedMultiplier;
+		SprintSpeed = WalkSpeed * SprintSpeedMultiplier;
+		MoveComp->MaxWalkSpeed = SprintSpeed;
+			
+		JumpForce = Data->JumpForce;
+		MoveComp->JumpZVelocity = JumpForce;
+			
+		AirControl = Data->AirControl;
+		MoveComp->AirControl = AirControl;
+			
+		AirControlBoostMultiplier = Data->AirControlBoostMultiplier;
+		MoveComp->AirControlBoostMultiplier = AirControlBoostMultiplier;
+			
+		AirControlBoostVelocityThreshold = Data->AirControlBoostVelocityThreshold;
+		FallingLateralFriction = Data->FallingLateralFriction;
+			
+		MaxHealth = Data->MaxHealth;
+		Health = Data->Health;
+			
+		AttackDamage = Data->AttackDamage;
+	}
 	
 }
 
@@ -60,6 +116,11 @@ ANinjaCharacter::ANinjaCharacter()
 void ANinjaCharacter::BeginPlay()
 {
 	Super::BeginPlay();	
+	
+	if (CharacterStatDataTable)
+		InitializeCharacterStatsBasedOnDataTable();	
+	
+	
 }
 
 // === About Inputs & Control Actions ===
@@ -138,13 +199,20 @@ void ANinjaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 }
 
 
-void ANinjaCharacter::SetAirControl(float AirControl, float AirControlBoostMultiplier, float AirControlBoostVelocityThreshold, float FallingLateralFriction )
+void ANinjaCharacter::SetAirControl(float NewAirControl, float NewAirControlBoostMultiplier, float NewAirControlBoostVelocityThreshold, float NewFallingLateralFriction )
 {
 	if (MoveComp)
 	{	
+		AirControl = NewAirControl;
 		MoveComp->AirControl = AirControl;
+		
+		AirControlBoostMultiplier = NewAirControlBoostMultiplier;
 		MoveComp->AirControlBoostMultiplier = AirControlBoostMultiplier;
+		
+		AirControlBoostVelocityThreshold = NewAirControlBoostVelocityThreshold;
 		MoveComp->AirControlBoostVelocityThreshold = AirControlBoostVelocityThreshold;
+		
+		FallingLateralFriction = NewFallingLateralFriction;
 		MoveComp->FallingLateralFriction = FallingLateralFriction ;
 	}
 }
@@ -222,7 +290,11 @@ void ANinjaCharacter::StopWalk(const FInputActionValue& value)
 
 float ANinjaCharacter::GetSpeed() const
 {
-	return MoveComp->MaxWalkSpeed;	
+	if (MoveComp)
+	{
+		return MoveComp->MaxWalkSpeed;
+	}
+	return WalkSpeed;	
 
 }
 
@@ -248,6 +320,17 @@ void ANinjaCharacter::SetHealth(float Amount)
 	Health = FMath::Clamp(Health + Amount, 0.0f, MaxHealth);
 	
 }
+
+float ANinjaCharacter::GetAttackDamage() const
+{
+	return AttackDamage;
+}
+
+void ANinjaCharacter::SetAttackDamage(float Amount)
+{
+	AttackDamage = Amount;
+}
+// === ===
 
 
 // === ===
