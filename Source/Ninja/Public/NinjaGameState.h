@@ -25,14 +25,11 @@ public:
 	int32 SpawnedMonsterCount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Monster")
 	int32 KillMonsterCount;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Level")
-	int32 MaxLevels;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Score")
-	int32 CurrentLevelScore;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level")
 	TArray<FName> LevelMapNames;
 	UPROPERTY(BlueprintReadOnly)
 	float StartTime;
+	int32 LatestScore;
 	
 	FTimerHandle TimerHandle;
 	
@@ -49,4 +46,5 @@ public:
 	
 	void StartLevel();
 	void EndLevel();
+	bool IsNewScore() const;
 };
