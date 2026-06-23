@@ -1,20 +1,18 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "NinjaMonster.generated.h"
+#include "GameFramework/Character.h"
+#include "NinjaBaseMonster.generated.h"
 
 class USphereComponent;
 
 UCLASS()
-class NINJA_API ANinjaMonster : public AActor
+class NINJA_API ANinjaBaseMonster : public ACharacter
 {
 	GENERATED_BODY()
-	
-public:	
-	ANinjaMonster();
+
+public:
+	ANinjaBaseMonster();
 	UFUNCTION(BlueprintCallable)
 	float GetHp() const {return HP;}
 	UFUNCTION(BlueprintCallable)
@@ -22,6 +20,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetHp(float NewHp);
 	
+protected:
+	virtual void BeginPlay() override;
+
 	UFUNCTION()
 	virtual void OnMonsterOverLap(
 		UPrimitiveComponent* OverlappedComp,
@@ -30,26 +31,22 @@ public:
 		int32 OtherBodyIndex,
 		bool bFromSweep,
 		const FHitResult& SweepResult);
-
 	
-protected:
 	// Called when the game starts or when spawned
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Monster")
-	USceneComponent*Scene;
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Monster")
-	USphereComponent *DamageCollsion;
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Monster")
-	USphereComponent *BlockCollsion;
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Monster")
-	USkeletalMeshComponent* SkeletalMesh;	
-	
+	USphereComponent *DamageCollision;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster")
 	float HP;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster")
 	float MaxHP;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster")
 	float Damage;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster")
+	float MoveSpeed;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
+	bool bChaseOnStart = false;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
+	bool bUseRange = false;
 	
 	virtual void OnDead();
-	
 };
