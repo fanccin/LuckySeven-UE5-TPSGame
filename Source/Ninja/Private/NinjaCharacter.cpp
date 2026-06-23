@@ -4,7 +4,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h" 
-#include  "NinjaCharacterController.h"
+#include "NinjaCharacterController.h"
+#include "NinjaGameState.h"
 
 //#include "NinjaCharacterControllerStage1"
 //#include "NinjaCharacterStatusStage1"
@@ -151,16 +152,15 @@ void ANinjaCharacter::Look(const FInputActionValue& value)
 }
 
 void ANinjaCharacter::StartJump(const FInputActionValue& value)
-{
-	// Jump 함수는 Character가 기본 제공
+{	
 	if (value.Get<bool>())
 	{
+		GetCharacterMovement()->JumpZVelocity = JumpForce;
 		Jump();
 	}
 }
 void ANinjaCharacter::StopJump(const FInputActionValue& value)
 {	
-	// StopJumping 함수도 Character가 기본 제공
 	if (!value.Get<bool>())
 	{
 		StopJumping();
@@ -226,7 +226,7 @@ void ANinjaCharacter::SetHealth(float Amount)
 float ANinjaCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	// 기본 데미지 처리 로직 호출 (필수는 아님)
-	int32 ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	// 체력을 데미지만큼 감소시키고, 0 이하로 떨어지지 않도록 Clamp
 	//Health = FMath::Clamp(Health - DamageAmount, 0.0f, MaxHealth);
@@ -244,12 +244,15 @@ float ANinjaCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 
 void ANinjaCharacter::OnDeath()
 {	
-	if (GEngine)
-	{ 
-		GEngine->AddOnScreenDebugMessage(
-				-1, 2.f, FColor::Red,
-				 TEXT("ANinjaCharacter is Dead!"));
+	if (!GetWorld()) return;
+
+
+	if (ANinjaGameState* NinjaGameState = GetWorld()->GetGameState<ANinjaGameState>())
+	{
+		NinjaGameState->OnGameOver();
 	}
+	
+	
 }
 
 
