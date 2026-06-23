@@ -9,16 +9,6 @@ UNinjaGameInstance::UNinjaGameInstance() {
 	CurrentLevelIndex = 0;
 }
 
-void UNinjaGameInstance::Init()
-{
-	Super::Init();
-	ANinjaGameState* NinjaGameState = GetWorld()->GetGameState<ANinjaGameState>();
-	for (FName LevelMapName : NinjaGameState->LevelMapNames)
-	{
-		OpenedLevels.Add(LevelMapName == "MenuLevel");
-		ScoresByStage.Add(0);
-	}
-}
 
 void UNinjaGameInstance::AddToScore(const int32 Amount) {
 	ScoresByStage[CurrentLevelIndex] += Amount;

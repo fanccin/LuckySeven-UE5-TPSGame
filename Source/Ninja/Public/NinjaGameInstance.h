@@ -17,8 +17,6 @@ class NINJA_API UNinjaGameInstance : public UGameInstance
 public:
 	UNinjaGameInstance();
 	
-	virtual void Init() override;
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GameData")
 	int32 CurrentLevelIndex;
 	UFUNCTION(BlueprintCallable, Category = "GameData")
