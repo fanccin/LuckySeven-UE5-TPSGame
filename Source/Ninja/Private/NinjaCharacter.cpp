@@ -16,6 +16,8 @@ ANinjaCharacter::ANinjaCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	
+	MoveComp = GetCharacterMovement();
+	
 	// === Setup ===
 	// = Components =
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
@@ -34,11 +36,23 @@ ANinjaCharacter::ANinjaCharacter()
 	SprintSpeedMultiplier = 2.0f; // temp value
 	SprintSpeed = WalkSpeed * SprintSpeedMultiplier;
 	
-	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed; // it's sprint is default
+	MoveComp->MaxWalkSpeed = SprintSpeed; // it's sprint is default
 	
 	// = Stats =	
 	MaxHealth = 100.0f;
 	Health = MaxHealth;
+	
+	// = Jump
+	MoveComp->JumpZVelocity = JumpForce;
+	// 공중 제어력 설정 (0.0 ~ 1.0 사이, 1.0은 지상과 동일한 제어력)
+	MoveComp->AirControl = 1.0f;
+	// 공중 제어 부스트 배율 설정 (점프 키 유지 시 제어력 증폭)
+	MoveComp->AirControlBoostMultiplier = 2.0f;
+	// 공중 제어 부스트가 발동할 속도 임계값
+	MoveComp->AirControlBoostVelocityThreshold = 25.0f;
+	// 공중 가로 마찰력 (값이 높을수록 공중에서 입력 중지 시 즉시 멈춤)
+	MoveComp->FallingLateralFriction = 0.5f;
+	
 	
 }
 
@@ -124,6 +138,18 @@ void ANinjaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 }
 
 
+void ANinjaCharacter::SetAirControl(float AirControl, float AirControlBoostMultiplier, float AirControlBoostVelocityThreshold, float FallingLateralFriction )
+{
+	if (MoveComp)
+	{	
+		MoveComp->AirControl = AirControl;
+		MoveComp->AirControlBoostMultiplier = AirControlBoostMultiplier;
+		MoveComp->AirControlBoostVelocityThreshold = AirControlBoostVelocityThreshold;
+		MoveComp->FallingLateralFriction = FallingLateralFriction ;
+	}
+}
+
+
 void ANinjaCharacter::Move(const FInputActionValue& value)
 {
 	
@@ -155,7 +181,9 @@ void ANinjaCharacter::StartJump(const FInputActionValue& value)
 {	
 	if (value.Get<bool>())
 	{
-		GetCharacterMovement()->JumpZVelocity = JumpForce;
+		// 혹시라도 인게임중 점프 높이 변경이 없을 시 빼면 됩니다.
+		MoveComp->JumpZVelocity = JumpForce;
+		
 		Jump();
 	}
 }
@@ -171,9 +199,9 @@ void ANinjaCharacter::StartWalk(const FInputActionValue& value)
 {
 	// Shift 키를 누른 순간 이 함수가 호출된다고 가정
 	// WalkSpeed 를 적용
-	if (GetCharacterMovement())
+	if (MoveComp)
 	{
-		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+		MoveComp->MaxWalkSpeed = WalkSpeed;
 	}
 
 }
@@ -181,11 +209,11 @@ void ANinjaCharacter::StopWalk(const FInputActionValue& value)
 {
 	// Shift 키를 뗀 순간 이 함수가 호출
 	// 평상시 속도로 복귀 (Default is Sprint)
-	if (GetCharacterMovement())
+	if (MoveComp)
 	{
 		SprintSpeed = WalkSpeed * SprintSpeedMultiplier;		
 		
-		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+		MoveComp->MaxWalkSpeed = SprintSpeed;
 	}
 }
 
@@ -194,16 +222,16 @@ void ANinjaCharacter::StopWalk(const FInputActionValue& value)
 
 float ANinjaCharacter::GetSpeed() const
 {
-	return GetCharacterMovement()->MaxWalkSpeed;	
+	return MoveComp->MaxWalkSpeed;	
 
 }
 
 void ANinjaCharacter::SetSpeed(float Amount)
 {
-	if (GetCharacterMovement())
+	if (MoveComp)
 	{
 		WalkSpeed = Amount;			
-		GetCharacterMovement()->MaxWalkSpeed =  WalkSpeed * SprintSpeedMultiplier;			
+		MoveComp->MaxWalkSpeed =  WalkSpeed * SprintSpeedMultiplier;			
 	}
 }
 

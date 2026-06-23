@@ -4,12 +4,12 @@
 #include "GameFramework/Character.h"
 #include "NinjaCharacter.generated.h"
 
+// class UWidgetComponent;
 
 // Forward Declaration
 class USpringArmComponent; // 스프링 암 관련 클래스 헤더
 class UCameraComponent; // 카메라 관련 클래스 전방 선언
-// class UWidgetComponent;
-
+class UCharacterMovementComponent;
 
 //
 struct FInputActionValue; // Enhanced Input에서 액션 값을 받을 때 사용하는 구조체
@@ -30,6 +30,10 @@ protected:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
+	//
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	UCharacterMovementComponent* MoveComp = nullptr;
+	
 	// === Functions ===
 	UFUNCTION()
 	void Move(const FInputActionValue& value);
@@ -43,6 +47,9 @@ protected:
 	void StartWalk(const FInputActionValue& value);
 	UFUNCTION()
 	void StopWalk(const FInputActionValue& value);
+	
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	void SetAirControl(float AirControl, float AirControlBoostMultiplier, float AirControlBoostVelocityThreshold, float FallingLateralFriction);
 	
 	
 	// === Components ===
