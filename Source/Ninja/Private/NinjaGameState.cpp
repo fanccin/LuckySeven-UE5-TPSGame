@@ -24,7 +24,17 @@ void ANinjaGameState::BeginPlay()
 	
 	StartTime = World->GetTimeSeconds();
 	if (UNinjaGameInstance* NinjaGameInstance = World->GetGameInstance<UNinjaGameInstance>())
+	{
+		for (FName LevelMapName : LevelMapNames)
+		{
+			NinjaGameInstance->OpenedLevels.Add(LevelMapName == "MenuLevel");
+			NinjaGameInstance->ScoresByStage.Add(0);
+		}
+		
 		LatestScore = NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex];
+	}
+	
+	
 }
 
 void ANinjaGameState::Tick(float DeltaTime)
