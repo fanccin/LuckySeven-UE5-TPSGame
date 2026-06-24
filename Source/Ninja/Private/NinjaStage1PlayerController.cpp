@@ -2,57 +2,57 @@
 
 
 #include "NinjaStage1PlayerController.h"
-#include "NinjaGameInstance.h"
-#include "NinjaClearWidget.h"
-#include "NinjaGameState.h"
-#include "ToolContextInterfaces.h"
+#include "NinjaBasePlayerController.h"
 
-ANinjaStage1PlayerController::ANinjaStage1PlayerController() {
+#include "EnhancedInputSubsystems.h" // UEnhancedInputLocalPlayerSubsystem, AddMappingContext
+#include "EnhancedInputComponent.h" // UEnhancedInputComponent, BindAction()
+#include "InputActionValue.h" // FInputActionValue
+
+#include "GameFramework/PlayerController.h" // APlayerController
+#include "Engine/LocalPlayer.h" // ULocalPlayer
+#include "NinjaGameInstance.h"
+
+ANinjaStage1PlayerController::ANinjaStage1PlayerController()
+/*
+		:InputMappingContext(nullptr),
+		  MoveAction(nullptr),
+		  JumpAction(nullptr),
+		  LookAction(nullptr),
+		  WalkAction(nullptr)
+		  */
+{
 }
 
 void ANinjaStage1PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
+	{		
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
+			LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+		{
+			if (InputMappingContext)
+			{
+				// 추후 Priority 세팅
+				Subsystem->AddMappingContext(InputMappingContext, 0);
+			}
+		}
+	}
 }
 
 void ANinjaStage1PlayerController::ShowGameHUD(const bool bIsNewScore)
 {
 	Super::ShowGameHUD(bIsNewScore);
 	
-	if (!ClearWidgetInstance && ClearWidgetClass)
+	if (UGameInstance* GameInstance = GetGameInstance())
 	{
-		ClearWidgetInstance = CreateWidget<UNinjaClearWidget>(this, ClearWidgetClass);
-	}
-	
-	if (ClearWidgetInstance)
-	{
-		if (UNinjaGameInstance* NinjaGameInstance = Cast<UNinjaGameInstance>(GetGameInstance()))
+		if (UNinjaGameInstance* NinjaGameInstance = Cast<UNinjaGameInstance>(GameInstance))
 		{
-			int32 StageIndex = NinjaGameInstance->CurrentLevelIndex;
-			int32 CurrentScore = NinjaGameInstance->ScoresByStage.IsValidIndex(StageIndex) ? NinjaGameInstance->ScoresByStage[StageIndex] : 0;
-            
-			int32 Minutes = 0, Seconds = 0;
-			if (ANinjaGameState* GameState = GetWorld()->GetGameState<ANinjaGameState>())
-			{
-				float ElapsedTime = GameState->GetElapsedTime();
-				Minutes = FMath::FloorToInt(ElapsedTime / 60.0f);
-				Seconds = FMath::FloorToInt(ElapsedTime) % 60;
-			}
-
-			UNinjaClearWidget* ClearWidget = Cast<UNinjaClearWidget>(ClearWidgetInstance);
-			if (ClearWidget)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("=== [Controller] 전달 직전 데이터 ==="));
-				UE_LOG(LogTemp, Warning, TEXT("Minutes: %d, Seconds: %d, Score: %d"), Minutes, Seconds, CurrentScore);
-				ClearWidget->InitializeClearData(Minutes, Seconds, CurrentScore);
-			}
-			ClearWidgetInstance->AddToViewport();
-			SetShowMouseCursor(true);
+			// TODO 신성님 스테이지 종료 HUD 노출 로직 추가 필요
+			// 스테이지 합산 점수 NinjaGameInstance->GetTotalScore();
+			// 마지막 스테이지 클리어 여부 NinjaGameInstance->bIsFinalStageCleared
+			// 현재 스테이지 점수 NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex];
 		}
-	}	
-}
-//4스테이지 테스트
-void ANinjaStage1PlayerController::TestClearUI()
-{
-	ShowGameHUD(true);
+	}
 }
