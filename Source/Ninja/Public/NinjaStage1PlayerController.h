@@ -19,5 +19,5 @@ public:
 	ANinjaStage1PlayerController();
 	virtual void BeginPlay() override;
 	UFUNCTION(BlueprintCallable, Category = "HUD")
-	virtual void ShowGameHUD(int32 CurrentLevelScore, bool bIsNewScore) override;
+	virtual void ShowGameHUD(bool bIsNewScore) override;
 };
