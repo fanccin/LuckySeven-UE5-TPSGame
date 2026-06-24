@@ -20,5 +20,5 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ninja|Components")
 	UStaticMeshComponent* StaticMeshComp;
 	
-	virtual void BeginPlay() override;
+	virtual void BeginPlay() override; 
 };
