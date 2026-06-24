@@ -80,21 +80,29 @@ void ANinjaGameState::EndLevel() {
 		float MinTime = 10.0f;
 		float MaxTime = 300.0f;
 		float BonusScore = 0.0f;
-		if (Elapsed<=MinTime) BonusScore=MaxBonus;
+		if (Elapsed<=MinTime)
+		{
+			BonusScore=MaxBonus;
+		}
 		else if (Elapsed<MaxTime)
 		{
-			float Ratio=(MaxTime-Elapsed)/(MaxBonus-MinTime);
+			float Ratio=(MaxTime-Elapsed)/(MaxTime-MinTime);
 			BonusScore = Ratio*MaxBonus;
 		}
-		else BonusScore = 0.0f;
+		else
+		{
+			BonusScore = 0.0f;
+		}
 		NinjaGameInstance->ScoresByStage[CurrentIndex] += FMath::FloorToInt(BonusScore);
-		NinjaGameInstance->CurrentLevelIndex = NinjaGameInstance->CurrentLevelIndex + 1;
-		NinjaGameInstance->OpenedLevels[NinjaGameInstance->CurrentLevelIndex] = 1;
-		
-		NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex] += InitTimeScore - TimeScorePerSec * FMath::CeilToInt64(FMath::Max(GetElapsedTime() - SaveScoreSeconds, 0.0f));
+		NinjaGameInstance->CurrentLevelIndex = CurrentIndex + 1;
+		if (NinjaGameInstance->CurrentLevelIndex < NinjaGameInstance->OpenedLevels.Num())
+		{
+			NinjaGameInstance->OpenedLevels[NinjaGameInstance->CurrentLevelIndex] = 1;
+		}
 		if (LevelMapNames.Num() == NinjaGameInstance->CurrentLevelIndex)
+		{
 			NinjaGameInstance->bIsFinalStageCleared = true;
-		
+		}
 		OnGameOver();
 	}
 }
