@@ -25,6 +25,8 @@ void ANinjaCharacter::Initialize()
 {
 	MoveComp = GetCharacterMovement();
 	
+	Tags.Add(FName("Player"));
+	
 	// === Setup ===
 	// = Components =
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
