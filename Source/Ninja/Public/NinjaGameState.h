@@ -31,6 +31,14 @@ public:
 	float StartTime;
 	int32 LatestScore;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Score")
+	int32 InitTimeScore;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Score")
+	int32 TimeScorePerSec;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Score")
+	int32 SaveScoreSeconds;
+	
+	
 	FTimerHandle TimerHandle;
 	
 	UFUNCTION(BlueprintPure, Category = "Score")

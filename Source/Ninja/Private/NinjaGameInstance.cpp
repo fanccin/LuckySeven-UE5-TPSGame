@@ -3,8 +3,6 @@
 
 #include "NinjaGameInstance.h"
 
-#include "NinjaGameState.h"
-
 UNinjaGameInstance::UNinjaGameInstance() {
 	CurrentLevelIndex = 0;
 	

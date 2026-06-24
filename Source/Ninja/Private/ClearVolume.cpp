@@ -17,7 +17,7 @@ AClearVolume::AClearVolume()
 	Collision->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	Collision->SetGenerateOverlapEvents(true);
 	Collision->SetupAttachment(Scene);
-	Collision->SetSphereRadius(33.0f);
+	Collision->SetSphereRadius(166.0f);
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMesh->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
@@ -44,12 +44,6 @@ void AClearVolume::OnItemOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 			{
 				if (ANinjaGameState* NinjaGameState = Cast<ANinjaGameState>(GetWorld()->GetGameState()))
 				{
-					GEngine->AddOnScreenDebugMessage(
-						-1,     // Key (-1이면 매번 새 메시지)
-						5.f,    // 표시 시간
-						FColor::Green,
-						TEXT("플레이어 목적지 도착!")
-					);
 					NinjaGameState->EndLevel();
 				}
 			},

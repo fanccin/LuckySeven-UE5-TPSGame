@@ -15,5 +15,5 @@ class NINJA_API ANinjaBasePlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
-	virtual void ShowGameHUD(int32 CurrentLevelScore, bool bIsNewScore);
+	virtual void ShowGameHUD(bool bIsNewScore);
 };

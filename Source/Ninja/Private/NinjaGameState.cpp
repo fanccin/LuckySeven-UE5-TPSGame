@@ -33,6 +33,7 @@ void ANinjaGameState::BeginPlay()
 		}
 		
 		LatestScore = NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex];
+		NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex] = 0;
 	}
 	
 	
@@ -75,24 +76,27 @@ void ANinjaGameState::EndLevel() {
 	{
 		NinjaGameInstance->CurrentLevelIndex = NinjaGameInstance->CurrentLevelIndex + 1;
 		NinjaGameInstance->OpenedLevels[NinjaGameInstance->CurrentLevelIndex] = 1;
+		// 시간 관련 점수 추가 로직
+		NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex] += InitTimeScore - TimeScorePerSec * FMath::CeilToInt64(FMath::Max(GetElapsedTime() - SaveScoreSeconds, 0.0f));
 		if (LevelMapNames.Num() == NinjaGameInstance->CurrentLevelIndex)
 			NinjaGameInstance->bIsFinalStageCleared = true;
+		
 		OnGameOver();
 	}
 }
 
 
+// TODO 인구님 - 캐릭터 사망시 호출 함수
 void ANinjaGameState::OnGameOver() {
 	UWorld* World = GetWorld();
-	// TODO 인구님 - 캐릭터 사망시 호출 함수
 	APlayerController* PlayerController = World->GetFirstPlayerController();
 	if (ANinjaBasePlayerController* SpartaPlayerController = Cast<ANinjaBasePlayerController>(PlayerController))
 	{
 		if (UNinjaGameInstance* NinjaGameInstance = World->GetGameInstance<UNinjaGameInstance>())
 		{
+			NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex] = FMath::Max(NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex], LatestScore);
 			SpartaPlayerController->SetPause(true);
 			SpartaPlayerController->ShowGameHUD(
-				NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex],
 				IsNewScore()
 			);
 		}
