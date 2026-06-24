@@ -1,12 +1,20 @@
 #include "MonsterAIController.h"
 
+#include "NinjaBaseMonster.h"
 #include "Kismet/GameplayStatics.h"
 
-void AMonsterAIController::BeginPlay()
+
+void AMonsterAIController::OnPossess(APawn* InPawn)
 {
-	Super::BeginPlay();
-	bChaseOnStart? StartChase() : DetectChase();
-	UE_LOG(LogTemp,Warning,TEXT("StartChase"));
+	Super::OnPossess(InPawn);
+	ANinjaBaseMonster* Monster = Cast<ANinjaBaseMonster>(GetPawn());
+	if (Monster)
+	{	
+		bChaseOnStart = Monster->bChaseOnStart;
+		bUseRange = Monster->bUseRange;
+	}
+	bChaseOnStart ? StartChase(): DetectChase();
+
 
 }
 
@@ -15,9 +23,9 @@ void AMonsterAIController::DetectChase()
 	bUseRange? RangeDetect() : SightDetect();
 }
 
+
 void AMonsterAIController::StartChase()
 {
-	UE_LOG(LogTemp,Warning,TEXT("StartChase2"));
 
 	GetWorldTimerManager().SetTimer(
 		ChaseTimerHandle,
@@ -30,11 +38,11 @@ void AMonsterAIController::StartChase()
 
 void AMonsterAIController::ChasePlayer()
 {
-	UE_LOG(LogTemp,Warning,TEXT("StartChase3"));
 
 	APawn* Player = UGameplayStatics::GetPlayerPawn(GetWorld(),0);
 	if (Player)
-	{	
+	{		
+
 		MoveToActor(Player);
 		FVector PawnVel = GetPawn()->GetVelocity().GetSafeNormal();
 		if (!PawnVel.IsNearlyZero())

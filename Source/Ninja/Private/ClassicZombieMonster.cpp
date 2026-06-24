@@ -17,6 +17,9 @@ AClassicZombieMonster::AClassicZombieMonster()
 	Damage = 100.0f;
 	bChaseOnStart = true;
 	bUseRange = false;
+	CollisionRadius = 40.0f;
+	CollisionHeight = 120.0f;
+
 }
 
 void AClassicZombieMonster::OnDead()

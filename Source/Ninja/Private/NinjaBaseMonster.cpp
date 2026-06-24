@@ -1,7 +1,7 @@
 #include "NinjaBaseMonster.h"
 #include "MonsterAIController.h"
 #include "NinjaCharacter.h"
-#include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -9,19 +9,17 @@ ANinjaBaseMonster::ANinjaBaseMonster()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	
-	
-	DamageCollision = CreateDefaultSubobject<USphereComponent>(TEXT("DamageCollision"));
+	HP=MaxHP;
+	Damage = 10.0f;
+	DamageCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("DamageCollision"));
 	DamageCollision->SetCollisionProfileName(TEXT("Trigger"));	
 	DamageCollision->SetupAttachment(GetRootComponent());
-	
 	
 	DamageCollision->OnComponentBeginOverlap.AddDynamic(this,&ANinjaBaseMonster::OnMonsterOverLap);
 	
 	AIControllerClass = AMonsterAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	
-	HP=MaxHP;
-	Damage = 10.0f;
 	UE_LOG(LogTemp,Warning,TEXT("Base"));
 
 }
@@ -40,14 +38,10 @@ void ANinjaBaseMonster::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	DamageCollision->SetCapsuleRadius(CollisionRadius);
+	DamageCollision->SetCapsuleHalfHeight(CollisionHeight);
+
 	GetCharacterMovement() -> MaxWalkSpeed = MoveSpeed;
-	
-	AMonsterAIController* AIC = Cast<AMonsterAIController>(GetController());
-	if (AIC)
-	{
-        AIC->bChaseOnStart = bChaseOnStart;
-		AIC->bUseRange = bUseRange;
-	}
 	
 }
 
