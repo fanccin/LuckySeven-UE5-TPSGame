@@ -2,8 +2,10 @@
 
 
 #include "NinjaStage1PlayerController.h"
-
 #include "NinjaGameInstance.h"
+#include "NinjaClearWidget.h"
+#include "NinjaGameState.h"
+#include "ToolContextInterfaces.h"
 
 ANinjaStage1PlayerController::ANinjaStage1PlayerController() {
 }
@@ -17,14 +19,40 @@ void ANinjaStage1PlayerController::ShowGameHUD(const bool bIsNewScore)
 {
 	Super::ShowGameHUD(bIsNewScore);
 	
-	if (UGameInstance* GameInstance = GetGameInstance())
+	if (!ClearWidgetInstance && ClearWidgetClass)
 	{
-		if (UNinjaGameInstance* NinjaGameInstance = Cast<UNinjaGameInstance>(GameInstance))
-		{
-			// TODO 신성님 스테이지 종료 HUD 노출 로직 추가 필요
-			// 스테이지 합산 점수 NinjaGameInstance->GetTotalScore();
-			// 마지막 스테이지 클리어 여부 NinjaGameInstance->bIsFinalStageCleared
-			// 현재 스테이지 점수 NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex];
-		}
+		ClearWidgetInstance = CreateWidget<UNinjaClearWidget>(this, ClearWidgetClass);
 	}
+	
+	if (ClearWidgetInstance)
+	{
+		if (UNinjaGameInstance* NinjaGameInstance = Cast<UNinjaGameInstance>(GetGameInstance()))
+		{
+			int32 StageIndex = NinjaGameInstance->CurrentLevelIndex;
+			int32 CurrentScore = NinjaGameInstance->ScoresByStage.IsValidIndex(StageIndex) ? NinjaGameInstance->ScoresByStage[StageIndex] : 0;
+            
+			int32 Minutes = 0, Seconds = 0;
+			if (ANinjaGameState* GameState = GetWorld()->GetGameState<ANinjaGameState>())
+			{
+				float ElapsedTime = GameState->GetElapsedTime();
+				Minutes = FMath::FloorToInt(ElapsedTime / 60.0f);
+				Seconds = FMath::FloorToInt(ElapsedTime) % 60;
+			}
+
+			UNinjaClearWidget* ClearWidget = Cast<UNinjaClearWidget>(ClearWidgetInstance);
+			if (ClearWidget)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("=== [Controller] 전달 직전 데이터 ==="));
+				UE_LOG(LogTemp, Warning, TEXT("Minutes: %d, Seconds: %d, Score: %d"), Minutes, Seconds, CurrentScore);
+				ClearWidget->InitializeClearData(Minutes, Seconds, CurrentScore);
+			}
+			ClearWidgetInstance->AddToViewport();
+			SetShowMouseCursor(true);
+		}
+	}	
+}
+//4스테이지 테스트
+void ANinjaStage1PlayerController::TestClearUI()
+{
+	ShowGameHUD(true);
 }

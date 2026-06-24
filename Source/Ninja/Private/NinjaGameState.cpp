@@ -74,9 +74,23 @@ void ANinjaGameState::EndLevel() {
 	
 	if (UNinjaGameInstance* NinjaGameInstance = Cast<UNinjaGameInstance>(GetGameInstance()))
 	{
+		int32 CurrentIndex = NinjaGameInstance->CurrentLevelIndex;
+		float Elapsed = GetElapsedTime();
+		float MaxBonus = 1000.0f;
+		float MinTime = 10.0f;
+		float MaxTime = 300.0f;
+		float BonusScore = 0.0f;
+		if (Elapsed<=MinTime) BonusScore=MaxBonus;
+		else if (Elapsed<MaxTime)
+		{
+			float Ratio=(MaxTime-Elapsed)/(MaxBonus-MinTime);
+			BonusScore = Ratio*MaxBonus;
+		}
+		else BonusScore = 0.0f;
+		NinjaGameInstance->ScoresByStage[CurrentIndex] += FMath::FloorToInt(BonusScore);
 		NinjaGameInstance->CurrentLevelIndex = NinjaGameInstance->CurrentLevelIndex + 1;
 		NinjaGameInstance->OpenedLevels[NinjaGameInstance->CurrentLevelIndex] = 1;
-		// 시간 관련 점수 추가 로직
+		
 		NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex] += InitTimeScore - TimeScorePerSec * FMath::CeilToInt64(FMath::Max(GetElapsedTime() - SaveScoreSeconds, 0.0f));
 		if (LevelMapNames.Num() == NinjaGameInstance->CurrentLevelIndex)
 			NinjaGameInstance->bIsFinalStageCleared = true;

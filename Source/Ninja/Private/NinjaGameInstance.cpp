@@ -6,9 +6,6 @@
 UNinjaGameInstance::UNinjaGameInstance() {
 	CurrentLevelIndex = 0;
 	
-	ClearedFinalStage = false;
-	HighScoreTotal = 0;
-	StageHighScores.Init(0,4);
 }
 
 
