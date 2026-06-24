@@ -1,6 +1,7 @@
 #include "NinjaCharacter.h"
 
 #include "EnhancedInputComponent.h"
+#include "NinjaBasePlayerController.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h" 
@@ -131,11 +132,13 @@ void ANinjaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
-	// Enhanced InputComponent로 캐스팅
-    if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent))
-    {            	
-        if (ANinjaCharacterController* PlayerController = Cast<ANinjaCharacterController>(GetController()))
-        {
+	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	
+	if (!EnhancedInput) 
+		return;	
+	
+	if (ANinjaBasePlayerController* PlayerController = Cast<ANinjaBasePlayerController>(GetController()))
+	{
         	// null check
             if (PlayerController->MoveAction)
             {
@@ -196,7 +199,6 @@ void ANinjaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
                 );
             }    
         }
-    }
 	
 }
 
