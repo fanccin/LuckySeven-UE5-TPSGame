@@ -8,21 +8,20 @@ UCLASS()
 class NINJA_API AMonsterAIController : public AAIController
 {
 	GENERATED_BODY()
-public:
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
-	bool bChaseOnStart;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
-	bool bUseRange;	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
-	float ChaseDelay = 20.0f;
-	
 protected:
 	
 	
 	FTimerHandle ChaseTimerHandle;
 
-	virtual void BeginPlay() override;
+	virtual void OnPossess(APawn* InPawn) override;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
+	bool bChaseOnStart;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
+	bool bUseRange;	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
+	float ChaseDelay = 1.0f;
+	
 	void StartChase();
 	void ChasePlayer();
 	void DetectChase();
