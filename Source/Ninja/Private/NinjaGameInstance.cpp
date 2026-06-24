@@ -6,6 +6,10 @@
 UNinjaGameInstance::UNinjaGameInstance() {
 	TotalScore = 0;
 	CurrentLevelIndex = 0;
+	
+	ClearedFinalStage = false;
+	HighScoreTotal = 0;
+	StageHighScores.Init(0,4);
 }
 
 void UNinjaGameInstance::AddToScore(const int32 Amount) {
