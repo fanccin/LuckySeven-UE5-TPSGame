@@ -2,15 +2,43 @@
 
 
 #include "NinjaStage1PlayerController.h"
+#include "NinjaBasePlayerController.h"
 
+#include "EnhancedInputSubsystems.h" // UEnhancedInputLocalPlayerSubsystem, AddMappingContext
+#include "EnhancedInputComponent.h" // UEnhancedInputComponent, BindAction()
+#include "InputActionValue.h" // FInputActionValue
+
+#include "GameFramework/PlayerController.h" // APlayerController
+#include "Engine/LocalPlayer.h" // ULocalPlayer
 #include "NinjaGameInstance.h"
 
-ANinjaStage1PlayerController::ANinjaStage1PlayerController() {
+ANinjaStage1PlayerController::ANinjaStage1PlayerController()
+/*
+		:InputMappingContext(nullptr),
+		  MoveAction(nullptr),
+		  JumpAction(nullptr),
+		  LookAction(nullptr),
+		  WalkAction(nullptr)
+		  */
+{
 }
 
 void ANinjaStage1PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
+	{		
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
+			LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+		{
+			if (InputMappingContext)
+			{
+				// 추후 Priority 세팅
+				Subsystem->AddMappingContext(InputMappingContext, 0);
+			}
+		}
+	}
 }
 
 void ANinjaStage1PlayerController::ShowGameHUD(const bool bIsNewScore)
