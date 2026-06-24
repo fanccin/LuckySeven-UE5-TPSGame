@@ -19,7 +19,10 @@ public:
 	float GetMaxHp() const {return MaxHP;}
 	UFUNCTION(BlueprintCallable)
 	void SetHp(float NewHp);
-	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
+	bool bChaseOnStart = false;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
+	bool bUseRange = false;
 protected:
 	virtual void BeginPlay() override;
 
@@ -33,8 +36,8 @@ protected:
 		const FHitResult& SweepResult);
 	
 	// Called when the game starts or when spawned
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Monster")
-	USphereComponent *DamageCollision;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster")
+	UCapsuleComponent *DamageCollision;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster")
 	float HP;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster")
@@ -43,10 +46,7 @@ protected:
 	float Damage;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster")
 	float MoveSpeed;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
-	bool bChaseOnStart = false;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
-	bool bUseRange = false;
-	
+	float CollisionRadius;
+	float CollisionHeight;
 	virtual void OnDead();
 };
