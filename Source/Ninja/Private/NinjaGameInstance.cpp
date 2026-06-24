@@ -3,8 +3,9 @@
 
 #include "NinjaGameInstance.h"
 
+#include "NinjaGameState.h"
+
 UNinjaGameInstance::UNinjaGameInstance() {
-	TotalScore = 0;
 	CurrentLevelIndex = 0;
 	
 	ClearedFinalStage = false;
@@ -12,11 +13,14 @@ UNinjaGameInstance::UNinjaGameInstance() {
 	StageHighScores.Init(0,4);
 }
 
+
 void UNinjaGameInstance::AddToScore(const int32 Amount) {
-	TotalScore += Amount;
+	ScoresByStage[CurrentLevelIndex] += Amount;
 }
 
 int32 UNinjaGameInstance::GetTotalScore()
 {
+	int64 TotalScore = 0;
+	for (const int32 ByStage : ScoresByStage) TotalScore += ByStage;
 	return TotalScore;
 }

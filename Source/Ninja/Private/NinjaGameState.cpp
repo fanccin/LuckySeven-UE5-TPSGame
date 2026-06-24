@@ -12,33 +12,30 @@ ANinjaGameState::ANinjaGameState()
 {
 	SpawnedMonsterCount = 0;
 	KillMonsterCount = 0;
-	MaxLevels = LevelMapNames.Num();
 }
 
 void ANinjaGameState::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UWorld* World = GetWorld();
 	
-	FString CurrentMapName = GetWorld()->GetMapName();
+	FString CurrentMapName = World->GetMapName();
 	if (CurrentMapName.Contains("MenuLevel"))		ShowMainMenu();
 	
-	StartTime = GetWorld()->GetTimeSeconds();
-	
-	GetWorld()->GetTimerManager().SetTimer(
-		TimerHandle, 
-		[this]
+	StartTime = World->GetTimeSeconds();
+	if (UNinjaGameInstance* NinjaGameInstance = World->GetGameInstance<UNinjaGameInstance>())
+	{
+		for (FName LevelMapName : LevelMapNames)
 		{
-			
-			GEngine->AddOnScreenDebugMessage(
-				-1,     // Key (-1이면 매번 새 메시지)
-				0.1f,    // 표시 시간
-				FColor::Green,
-				FString::Printf(TEXT("Time : %.1f"), GetElapsedTime())
-			);
-		},
-		0.1f, 
-		true
-	);
+			NinjaGameInstance->OpenedLevels.Add(LevelMapName == "MenuLevel");
+			NinjaGameInstance->ScoresByStage.Add(0);
+		}
+		
+		LatestScore = NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex];
+	}
+	
+	
 }
 
 void ANinjaGameState::Tick(float DeltaTime)
@@ -53,12 +50,9 @@ void ANinjaGameState::StartLevel() {
 
 int32 ANinjaGameState::GetScore() const
 {
-	if (UGameInstance* GameInstance = GetGameInstance())
+	if (UNinjaGameInstance* NinjaGameInstance = GetGameInstance<UNinjaGameInstance>())
 	{
-		if (UNinjaGameInstance* NinjaGameInstance = Cast<UNinjaGameInstance>(GameInstance))
-		{
-			return NinjaGameInstance->GetTotalScore();
-		}
+		return NinjaGameInstance->GetTotalScore();
 	}
 	return 0;
 }
@@ -80,20 +74,28 @@ void ANinjaGameState::EndLevel() {
 	if (UNinjaGameInstance* NinjaGameInstance = Cast<UNinjaGameInstance>(GetGameInstance()))
 	{
 		NinjaGameInstance->CurrentLevelIndex = NinjaGameInstance->CurrentLevelIndex + 1;
-
+		NinjaGameInstance->OpenedLevels[NinjaGameInstance->CurrentLevelIndex] = 1;
+		if (LevelMapNames.Num() == NinjaGameInstance->CurrentLevelIndex)
+			NinjaGameInstance->bIsFinalStageCleared = true;
 		OnGameOver();
 	}
-	
 }
 
 
 void ANinjaGameState::OnGameOver() {
+	UWorld* World = GetWorld();
 	// TODO 인구님 - 캐릭터 사망시 호출 함수
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	APlayerController* PlayerController = World->GetFirstPlayerController();
 	if (ANinjaBasePlayerController* SpartaPlayerController = Cast<ANinjaBasePlayerController>(PlayerController))
 	{
-		SpartaPlayerController->SetPause(true);
-		SpartaPlayerController->ShowGameHUD(CurrentLevelScore);
+		if (UNinjaGameInstance* NinjaGameInstance = World->GetGameInstance<UNinjaGameInstance>())
+		{
+			SpartaPlayerController->SetPause(true);
+			SpartaPlayerController->ShowGameHUD(
+				NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex],
+				IsNewScore()
+			);
+		}
 	}
 }
 
@@ -106,4 +108,13 @@ void ANinjaGameState::ShowMainMenu() {
 float ANinjaGameState::GetElapsedTime() const
 {
 	return GetWorld()->GetTimeSeconds() - StartTime;
+}
+
+bool ANinjaGameState::IsNewScore() const
+{
+	if (UNinjaGameInstance* NinjaGameInstance = GetWorld()->GetGameInstance<UNinjaGameInstance>())
+	{
+		return LatestScore < NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex];
+	}
+	return false;
 }
