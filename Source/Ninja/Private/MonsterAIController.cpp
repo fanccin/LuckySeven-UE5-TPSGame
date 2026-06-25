@@ -4,6 +4,8 @@
 #include "Kismet/GameplayStatics.h"
 
 
+
+
 void AMonsterAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
@@ -13,14 +15,11 @@ void AMonsterAIController::OnPossess(APawn* InPawn)
 		bChaseOnStart = Monster->bChaseOnStart;
 		bUseRange = Monster->bUseRange;
 	}
-	bChaseOnStart ? StartChase(): DetectChase();
-
-
 }
 
-void AMonsterAIController::DetectChase()
+void AMonsterAIController::SetChaseEnabled(bool bEnable)
 {
-	bUseRange? RangeDetect() : SightDetect();
+	bEnable ? bChaseOnStart ? StartChase(): DetectChase() : GetWorldTimerManager().ClearTimer(ChaseTimerHandle);
 }
 
 
@@ -51,6 +50,11 @@ void AMonsterAIController::ChasePlayer()
 			SetControlRotation(NewRotation);
 		}
 	}
+}
+
+void AMonsterAIController::DetectChase()
+{
+	bUseRange? RangeDetect() : SightDetect();
 }
 
 

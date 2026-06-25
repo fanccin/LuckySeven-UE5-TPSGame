@@ -8,6 +8,9 @@ UCLASS()
 class NINJA_API AMonsterAIController : public AAIController
 {
 	GENERATED_BODY()
+public:
+	UFUNCTION(BlueprintCallable, Category="Monster|AI")
+	void SetChaseEnabled(bool bEnable);
 protected:
 	
 	

@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "NinjaBaseMonster.generated.h"
 
+class AMonsterSpawner;
 class USphereComponent;
 
 UCLASS()
@@ -19,12 +20,21 @@ public:
 	float GetMaxHp() const {return MaxHP;}
 	UFUNCTION(BlueprintCallable)
 	void SetHp(float NewHp);
+	UFUNCTION(BlueprintCallable)
+	void ActivateMonster(bool bActive);
+	UFUNCTION(BlueprintCallable)
+	void SetChaseEnable(bool bEnable);
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
 	bool bChaseOnStart = false;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|AI")
 	bool bUseRange = false;
-protected:
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Monster|Spawner")
+	AMonsterSpawner* OwnerSpawner  =nullptr;
+
 	virtual void BeginPlay() override;
+
+protected:
 
 	UFUNCTION()
 	virtual void OnMonsterOverLap(
@@ -48,5 +58,6 @@ protected:
 	float MoveSpeed;
 	float CollisionRadius;
 	float CollisionHeight;
+	
 	virtual void OnDead();
 };
