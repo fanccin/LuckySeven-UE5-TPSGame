@@ -17,6 +17,8 @@ void ANinjaBasePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	
+	
 	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
 	{		
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
