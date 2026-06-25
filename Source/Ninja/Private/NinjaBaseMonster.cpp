@@ -1,5 +1,6 @@
 #include "NinjaBaseMonster.h"
 #include "MonsterAIController.h"
+#include "MonsterSpawner.h"
 #include "NinjaCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -20,8 +21,10 @@ ANinjaBaseMonster::ANinjaBaseMonster()
 	AIControllerClass = AMonsterAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	
-	UE_LOG(LogTemp,Warning,TEXT("Base"));
-
+	SetActorEnableCollision(false);
+	SetActorHiddenInGame(true);
+	
+	GetCharacterMovement()->GravityScale = 0.0f;
 }
 
 
@@ -66,6 +69,29 @@ void ANinjaBaseMonster::OnMonsterOverLap(UPrimitiveComponent* OverlappedComp, AA
 
 void ANinjaBaseMonster::OnDead()
 {
-	Destroy();
+	if (OwnerSpawner)
+	{
+		OwnerSpawner->ReturnToPool(this);
+	}
 	//TODO : 몬스터 사망시 설정에 따라 수정
+}
+
+void ANinjaBaseMonster::ActivateMonster(bool bActive)
+{	
+	SetActorHiddenInGame(!bActive);
+	SetActorEnableCollision(bActive);
+	
+	GetCharacterMovement()->GravityScale = bActive ? 1.0f : 0.0f;
+	
+
+}
+
+void ANinjaBaseMonster::SetChaseEnable(bool bEnable)
+{	
+	AMonsterAIController* AIC = Cast<AMonsterAIController>(GetController());
+	if (AIC)
+	{
+		AIC->SetChaseEnabled(bEnable);
+	}
+	
 }
