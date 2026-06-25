@@ -80,7 +80,16 @@ void ANinjaGameState::EndLevel() {
 		if (LevelMapNames.Num() == NinjaGameInstance->CurrentLevelIndex)
 			NinjaGameInstance->bIsFinalStageCleared = true;
 		
-		OnGameOver();
+		UWorld* World = GetWorld();
+		
+		if (ANinjaBasePlayerController* SpartaPlayerController = World->GetFirstPlayerController<ANinjaBasePlayerController>())
+		{
+			bool bIsNewScore = IsNewScore();
+			NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex] = FMath::Max(NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex], LatestScore);
+			SpartaPlayerController->SetPause(true);
+			SpartaPlayerController->ShowGameHUD(bIsNewScore);
+		}
+		
 	}
 }
 
@@ -88,17 +97,10 @@ void ANinjaGameState::EndLevel() {
 // TODO 인구님 - 캐릭터 사망시 호출 함수
 void ANinjaGameState::OnGameOver() {
 	UWorld* World = GetWorld();
-	APlayerController* PlayerController = World->GetFirstPlayerController();
-	if (ANinjaBasePlayerController* SpartaPlayerController = Cast<ANinjaBasePlayerController>(PlayerController))
+	if (ANinjaBasePlayerController* SpartaPlayerController = World->GetFirstPlayerController<ANinjaBasePlayerController>())
 	{
-		if (UNinjaGameInstance* NinjaGameInstance = World->GetGameInstance<UNinjaGameInstance>())
-		{
-			NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex] = FMath::Max(NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex], LatestScore);
-			SpartaPlayerController->SetPause(true);
-			SpartaPlayerController->ShowGameHUD(
-				IsNewScore()
-			);
-		}
+		SpartaPlayerController->SetPause(true);
+		SpartaPlayerController->ShowGameOverHUD();
 	}
 }
 

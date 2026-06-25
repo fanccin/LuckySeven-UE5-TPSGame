@@ -13,13 +13,19 @@ class UInputAction;
 //
 struct FInputActionValue;
 
-UCLASS(Abstract)
+UCLASS()
 class NINJA_API ANinjaBasePlayerController : public APlayerController
 {
 	GENERATED_BODY()
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> ClearWidgetClass;
+	UPROPERTY()
+	UUserWidget* ClearWidgetInstance;
 	
 public:
-	virtual void ShowGameHUD(bool bIsNewScore);
+	ANinjaBasePlayerController();
+	virtual void BeginPlay() override;
 	
 	//	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
@@ -34,4 +40,18 @@ public:
 	UInputAction* LookAction;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	UInputAction* WalkAction;
+	
+	
+	UFUNCTION(BlueprintCallable, Category = "HUD")
+	virtual void ShowGameHUD(bool bIsNewScore);
+	UFUNCTION(BlueprintCallable, Category = "HUD")
+	virtual void ShowGameOverHUD();
+	
+	//4스테이지 테스트
+	UFUNCTION(Exec)
+	void TestClearUI();
+	
+private:
+	UPROPERTY(EditDefaultsOnly)
+	
 };

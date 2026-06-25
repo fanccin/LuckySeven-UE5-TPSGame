@@ -5,6 +5,7 @@
 
 UNinjaGameInstance::UNinjaGameInstance() {
 	CurrentLevelIndex = 0;
+	
 }
 
 
