@@ -5,7 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h" 
-#include "NinjaCharacterController.h"
+
 #include "NinjaCharacterStatData.h"
 #include "NinjaGameState.h"
 
