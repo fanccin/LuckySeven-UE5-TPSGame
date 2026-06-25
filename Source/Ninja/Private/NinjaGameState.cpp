@@ -7,7 +7,6 @@
 #include "NinjaGameInstance.h"
 
 
-
 ANinjaGameState::ANinjaGameState()
 {
 	SpawnedMonsterCount = 0;
@@ -74,38 +73,23 @@ void ANinjaGameState::EndLevel() {
 	
 	if (UNinjaGameInstance* NinjaGameInstance = Cast<UNinjaGameInstance>(GetGameInstance()))
 	{
-		int32 CurrentIndex = NinjaGameInstance->CurrentLevelIndex;
-		float LocalElapsed = GetElapsedTime();
-		const float LocalMaxBonus = 1000.0f;
-		const float LocalMinTime = 10.0f;
-		const float LocalMaxTime = 300.0f;
-		float LocalBonusScore = 0.0f;
-		if (LocalElapsed<=LocalMinTime)
-		{
-			LocalBonusScore=LocalMaxBonus;
-		}
-		else if (LocalElapsed<LocalMaxTime)
-		{
-			float Ratio=(LocalMaxTime-LocalElapsed)/(LocalMaxTime-LocalMinTime);
-			LocalBonusScore = Ratio*LocalMaxBonus;
-		}
-		else
-		{
-			LocalBonusScore = 0.0f;
-		}
-		int64 FinalBonusScore = FMath::FloorToInt64(LocalBonusScore);
-		
-		NinjaGameInstance->ScoresByStage[CurrentIndex] += FinalBonusScore;
-		
-		if (NinjaGameInstance->CurrentLevelIndex +1 < NinjaGameInstance->OpenedLevels.Num())
-		{
-			NinjaGameInstance->OpenedLevels[(NinjaGameInstance->CurrentLevelIndex)+1] = 1;
-		}
-		if (LevelMapNames.Num() == NinjaGameInstance->CurrentLevelIndex+1)
-		{
+		NinjaGameInstance->CurrentLevelIndex = NinjaGameInstance->CurrentLevelIndex + 1;
+		NinjaGameInstance->OpenedLevels[NinjaGameInstance->CurrentLevelIndex] = 1;
+		// 시간 관련 점수 추가 로직
+		NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex] += InitTimeScore - TimeScorePerSec * FMath::CeilToInt64(FMath::Max(GetElapsedTime() - SaveScoreSeconds, 0.0f));
+		if (LevelMapNames.Num() == NinjaGameInstance->CurrentLevelIndex)
 			NinjaGameInstance->bIsFinalStageCleared = true;
+		
+		UWorld* World = GetWorld();
+		
+		if (ANinjaBasePlayerController* SpartaPlayerController = World->GetFirstPlayerController<ANinjaBasePlayerController>())
+		{
+			bool bIsNewScore = IsNewScore();
+			NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex] = FMath::Max(NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex], LatestScore);
+			SpartaPlayerController->SetPause(true);
+			SpartaPlayerController->ShowGameHUD(bIsNewScore);
 		}
-		OnGameOver();
+		
 	}
 }
 
@@ -113,18 +97,10 @@ void ANinjaGameState::EndLevel() {
 // TODO 인구님 - 캐릭터 사망시 호출 함수
 void ANinjaGameState::OnGameOver() {
 	UWorld* World = GetWorld();
-	APlayerController* PlayerController = World->GetFirstPlayerController();
-	if (ANinjaBasePlayerController* SpartaPlayerController = Cast<ANinjaBasePlayerController>(PlayerController))
+	if (ANinjaBasePlayerController* SpartaPlayerController = World->GetFirstPlayerController<ANinjaBasePlayerController>())
 	{
-		if (UNinjaGameInstance* NinjaGameInstance = World->GetGameInstance<UNinjaGameInstance>())
-		{
-			bool bIsNewScore = IsNewScore();
-			NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex] = FMath::Max(NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex], LatestScore);
-			SpartaPlayerController->SetPause(true);
-			SpartaPlayerController->ShowGameHUD(
-				bIsNewScore
-			);
-		}
+		SpartaPlayerController->SetPause(true);
+		SpartaPlayerController->ShowGameOverHUD();
 	}
 }
 
@@ -147,4 +123,3 @@ bool ANinjaGameState::IsNewScore() const
 	}
 	return false;
 }
-

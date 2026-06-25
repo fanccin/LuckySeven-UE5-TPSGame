@@ -16,18 +16,7 @@ class NINJA_API ANinjaStage1PlayerController : public ANinjaBasePlayerController
 	GENERATED_BODY()
 	
 	
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UUserWidget> ClearWidgetClass;
-	UPROPERTY()
-	UUserWidget* ClearWidgetInstance;
 public:
 	ANinjaStage1PlayerController();
 	virtual void BeginPlay() override;
-	UFUNCTION(BlueprintCallable, Category = "HUD")
-	virtual void ShowGameHUD(bool bIsNewScore) override;
-	
-	//4스테이지 테스트
-	UFUNCTION(Exec)
-	void TestClearUI();
 };
