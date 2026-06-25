@@ -51,7 +51,4 @@ public:
 	UFUNCTION(Exec)
 	void TestClearUI();
 	
-private:
-	UPROPERTY(EditDefaultsOnly)
-	
 };
