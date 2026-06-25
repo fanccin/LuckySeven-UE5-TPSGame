@@ -75,31 +75,33 @@ void ANinjaGameState::EndLevel() {
 	if (UNinjaGameInstance* NinjaGameInstance = Cast<UNinjaGameInstance>(GetGameInstance()))
 	{
 		int32 CurrentIndex = NinjaGameInstance->CurrentLevelIndex;
-		float Elapsed = GetElapsedTime();
-		float MaxBonus = 1000.0f;
-		float MinTime = 10.0f;
-		float MaxTime = 300.0f;
-		float BonusScore = 0.0f;
-		if (Elapsed<=MinTime)
+		float LocalElapsed = GetElapsedTime();
+		const float LocalMaxBonus = 1000.0f;
+		const float LocalMinTime = 10.0f;
+		const float LocalMaxTime = 300.0f;
+		float LocalBonusScore = 0.0f;
+		if (LocalElapsed<=LocalMinTime)
 		{
-			BonusScore=MaxBonus;
+			LocalBonusScore=LocalMaxBonus;
 		}
-		else if (Elapsed<MaxTime)
+		else if (LocalElapsed<LocalMaxTime)
 		{
-			float Ratio=(MaxTime-Elapsed)/(MaxTime-MinTime);
-			BonusScore = Ratio*MaxBonus;
+			float Ratio=(LocalMaxTime-LocalElapsed)/(LocalMaxTime-LocalMinTime);
+			LocalBonusScore = Ratio*LocalMaxBonus;
 		}
 		else
 		{
-			BonusScore = 0.0f;
+			LocalBonusScore = 0.0f;
 		}
-		NinjaGameInstance->ScoresByStage[CurrentIndex] += FMath::FloorToInt(BonusScore);
-		NinjaGameInstance->CurrentLevelIndex = CurrentIndex + 1;
-		if (NinjaGameInstance->CurrentLevelIndex < NinjaGameInstance->OpenedLevels.Num())
+		int64 FinalBonusScore = FMath::FloorToInt64(LocalBonusScore);
+		
+		NinjaGameInstance->ScoresByStage[CurrentIndex] += FinalBonusScore;
+		
+		if (NinjaGameInstance->CurrentLevelIndex +1 < NinjaGameInstance->OpenedLevels.Num())
 		{
-			NinjaGameInstance->OpenedLevels[NinjaGameInstance->CurrentLevelIndex] = 1;
+			NinjaGameInstance->OpenedLevels[(NinjaGameInstance->CurrentLevelIndex)+1] = 1;
 		}
-		if (LevelMapNames.Num() == NinjaGameInstance->CurrentLevelIndex)
+		if (LevelMapNames.Num() == NinjaGameInstance->CurrentLevelIndex+1)
 		{
 			NinjaGameInstance->bIsFinalStageCleared = true;
 		}
@@ -116,10 +118,11 @@ void ANinjaGameState::OnGameOver() {
 	{
 		if (UNinjaGameInstance* NinjaGameInstance = World->GetGameInstance<UNinjaGameInstance>())
 		{
+			bool bIsNewScore = IsNewScore();
 			NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex] = FMath::Max(NinjaGameInstance->ScoresByStage[NinjaGameInstance->CurrentLevelIndex], LatestScore);
 			SpartaPlayerController->SetPause(true);
 			SpartaPlayerController->ShowGameHUD(
-				IsNewScore()
+				bIsNewScore
 			);
 		}
 	}
@@ -144,3 +147,4 @@ bool ANinjaGameState::IsNewScore() const
 	}
 	return false;
 }
+
