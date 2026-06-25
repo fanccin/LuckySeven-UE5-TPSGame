@@ -75,39 +75,42 @@ protected:
 	 */
 	
 	// === Variables ===	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	float WalkSpeed; 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	float SprintSpeedMultiplier; 
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	float SprintSpeed; // SprintSPeed = WalkSpeed * SprintSpeedMultiplier // It's default Speed	
 	
 	// = Jump =
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement/Jump")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
 	float JumpForce;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement/Jump")
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|Jump")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
 	float AirControl;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement/Jump")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
 	float AirControlBoostMultiplier;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement/Jump")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
 	float AirControlBoostVelocityThreshold;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement/Jump")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
 	float FallingLateralFriction;
 	
 	
 	//
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat/Health")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat|Health")
 	float MaxHealth;	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Stat/Health")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat|Health")
 	float Health;	
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Stat")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 	float AttackDamage;
 
 public:		

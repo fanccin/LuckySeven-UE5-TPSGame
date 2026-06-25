@@ -31,18 +31,7 @@ public:
 	UInputAction* LookAction;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	UInputAction* WalkAction;
-	
-	//
-	/*
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
-	TSubclassOf<UUserWidget> HUDWidgetClass;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HUD")
-	UUserWidget* HUDWidgetInstance;	
-	UFUNCTION(BlueprintPure, Category = "HUD")
-	UUserWidget* GetHUDWidget() const;
-	UFUNCTION(BlueprintCallable, Category = "HUD")
-	void ShowGameHUD();
-	*/
+
 	
 protected:
 	virtual void BeginPlay() override;
