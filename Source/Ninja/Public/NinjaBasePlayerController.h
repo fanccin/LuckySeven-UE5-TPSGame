@@ -50,4 +50,8 @@ public:
 	//4스테이지 테스트
 	UFUNCTION(Exec)
 	void TestClearUI();
+	
+private:
+	UPROPERTY(EditDefaultsOnly)
+	
 };
