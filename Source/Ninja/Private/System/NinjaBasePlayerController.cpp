@@ -1,19 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "NinjaBasePlayerController.h"
+#include "System/NinjaBasePlayerController.h"
 
 #include "EnhancedInputSubsystems.h" // UEnhancedInputLocalPlayerSubsystem, AddMappingContext
 #include "EnhancedInputComponent.h" // UEnhancedInputComponent, BindAction()
 
-#include "NinjaPlayerInputConfigDataAsset.h"
+#include "Character/NinjaPlayerInputConfigDataAsset.h"
 
-#include "NinjaCharacter.h"
+#include "Character/NinjaCharacter.h"
 
-#include "NinjaClearWidget.h"
-#include "NinjaGameInstance.h"
+#include "HUD/NinjaClearWidget.h"
+#include "System/NinjaGameInstance.h"
 
-#include "NinjaGameState.h"
+#include "System/NinjaGameState.h"
 
 
 ANinjaBasePlayerController::ANinjaBasePlayerController() 

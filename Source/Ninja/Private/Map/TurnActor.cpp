@@ -1,5 +1,5 @@
-#include "TurnActor.h"
-#include "TurnActorComponent.h"
+#include "Map/TurnActor.h"
+#include "Map/TurnActorComponent.h"
 
 ATurnActor::ATurnActor()
 {

@@ -1,4 +1,4 @@
-#include "ClassicZombieMonster.h"
+#include "Monster/ClassicZombieMonster.h"
 
 AClassicZombieMonster::AClassicZombieMonster()
 {

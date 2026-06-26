@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "NinjaClearWidget.h"
+#include "HUD/NinjaClearWidget.h"
+#include "System/NinjaGameInstance.h"
+#include "System/NinjaGameState.h"
 #include "Components/TextBlock.h"
-#include "NinjaGameInstance.h"
-#include "NinjaGameState.h"
 
 
 void UNinjaClearWidget::NativeConstruct()

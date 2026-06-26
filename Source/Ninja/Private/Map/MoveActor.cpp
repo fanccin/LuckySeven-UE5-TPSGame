@@ -1,5 +1,5 @@
-#include "MoveActor.h"
-#include "MoveActorComponent.h"
+#include "Map/MoveActor.h"
+#include "Map/MoveActorComponent.h"
 
 AMoveActor::AMoveActor()
 {

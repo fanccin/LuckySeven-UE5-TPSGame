@@ -1,3 +1,3 @@
 // since it's struct, I left it empty 
-#include "NinjaCharacterStatData.h"
+#include "Character/NinjaCharacterStatData.h"
 

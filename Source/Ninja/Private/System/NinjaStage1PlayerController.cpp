@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "NinjaStage1PlayerController.h"
-#include "NinjaBasePlayerController.h"
+#include "System/NinjaStage1PlayerController.h"
+#include "System/NinjaBasePlayerController.h"
 
 #include "GameFramework/PlayerController.h" // APlayerController
 #include "Engine/LocalPlayer.h" // ULocalPlayer

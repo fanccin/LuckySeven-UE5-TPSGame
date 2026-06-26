@@ -1,16 +1,13 @@
-#include "NinjaCharacter.h"
+#include "Character/NinjaCharacter.h"
 
 #include "EnhancedInputComponent.h"
-#include "NinjaBasePlayerController.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h" 
 
-#include "NinjaCharacterStatData.h"
-#include "NinjaGameState.h"
+#include "Character/NinjaCharacterStatData.h"
+#include "System/NinjaGameState.h"
 
-//#include "NinjaCharacterControllerStage1"
-//#include "NinjaCharacterStatusStage1"
 
 
 // Sets default values

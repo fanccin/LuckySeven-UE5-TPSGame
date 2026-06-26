@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "NinjaGameState.h"
+#include "System/NinjaGameState.h"
 
-#include "NinjaBasePlayerController.h"
-#include "NinjaGameInstance.h"
+#include "System/NinjaBasePlayerController.h"
+#include "System/NinjaGameInstance.h"
 
 
 ANinjaGameState::ANinjaGameState()
