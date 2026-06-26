@@ -8,13 +8,7 @@
 #include "Engine/LocalPlayer.h" // ULocalPlayer
 
 ANinjaStage1PlayerController::ANinjaStage1PlayerController()
-/*
-		:InputMappingContext(nullptr),
-		  MoveAction(nullptr),
-		  JumpAction(nullptr),
-		  LookAction(nullptr),
-		  WalkAction(nullptr)
-		  */
+
 {
 }
 

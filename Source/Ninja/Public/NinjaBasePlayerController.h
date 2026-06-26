@@ -27,28 +27,31 @@ public:
 	ANinjaBasePlayerController();
 	virtual void BeginPlay() override;
 	
-	//	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
-	UInputMappingContext* InputMappingContext;
-
-	// IA	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
-	UInputAction* MoveAction;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
-	UInputAction* JumpAction;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
-	UInputAction* LookAction;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
-	UInputAction* WalkAction;
+	virtual void SetupInputComponent() override;
+	
+public:
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	class UNinjaPlayerInputConfigDataAsset* NinjaPlayerInputConfigDataAsset;
 	
 	
+	// 
 	UFUNCTION(BlueprintCallable, Category = "HUD")
 	virtual void ShowGameHUD(bool bIsNewScore);
 	UFUNCTION(BlueprintCallable, Category = "HUD")
 	virtual void ShowGameOverHUD();
 	
+	
 	//4스테이지 테스트
 	UFUNCTION(Exec)
 	void TestClearUI();
 	
+	
+private:
+	// Inputs
+	void HandleMove(const FInputActionValue& Value);
+	void HandleStartJump(const FInputActionValue& Value);
+	void HandleStopJump(const FInputActionValue& Value);
+	void HandleLook(const FInputActionValue& Value);
+	void HandleStartWalk(const FInputActionValue& Value);
+	void HandleStopWalk(const FInputActionValue& Value);
 };

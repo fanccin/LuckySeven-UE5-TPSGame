@@ -36,8 +36,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	UDataTable* CharacterStatDataTable;
 	
-	
-	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
@@ -45,6 +43,48 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	UCharacterMovementComponent* MoveComp = nullptr;
 	
+
+	
+	// === Components ===
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	USpringArmComponent* SpringArmComp = nullptr;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	UCameraComponent* CameraComp = nullptr;	
+
+	
+	// === Variables ===		
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	float WalkSpeed; 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	float SprintSpeedMultiplier; 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	float SprintSpeed; // SprintSPeed = WalkSpeed * SprintSpeedMultiplier // It's default Speed	
+	
+	// = Jump =
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
+	float JumpForce;	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
+	float AirControl;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
+	float AirControlBoostMultiplier;	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
+	float AirControlBoostVelocityThreshold;	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
+	float FallingLateralFriction;
+	
+	
+	// = Stats =
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
+	float AttackDamage;
+	//
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat|Health")
+	float MaxHealth;	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat|Health")
+	float Health;	
+	
+	
+
+public:		
 	// === Functions ===
 	UFUNCTION()
 	void Move(const FInputActionValue& value);
@@ -62,58 +102,6 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void SetAirControl(float NewAirControl, float NewAirControlBoostMultiplier, float NewAirControlBoostVelocityThreshold, float NewFallingLateralFriction);
 	
-	
-	// === Components ===
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
-	USpringArmComponent* SpringArmComp = nullptr;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
-	UCameraComponent* CameraComp = nullptr;
-	
-	/*
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
-	UWidgetComponent* OverheadWidget = nullptr;
-	 */
-	
-	// === Variables ===	
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
-	float WalkSpeed; 
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
-	float SprintSpeedMultiplier; 
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
-	float SprintSpeed; // SprintSPeed = WalkSpeed * SprintSpeedMultiplier // It's default Speed	
-	
-	// = Jump =
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
-	float JumpForce;
-	
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement|Jump")
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
-	float AirControl;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
-	float AirControlBoostMultiplier;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
-	float AirControlBoostVelocityThreshold;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement|Jump")
-	float FallingLateralFriction;
-	
-	
-	//
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat|Health")
-	float MaxHealth;	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat|Health")
-	float Health;	
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
-	float AttackDamage;
-
-public:		
 	//virtual void Tick(float DeltaTime) override;
 
 	//=== Get Set ===	

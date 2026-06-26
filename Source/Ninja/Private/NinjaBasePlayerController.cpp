@@ -5,12 +5,19 @@
 
 #include "EnhancedInputSubsystems.h" // UEnhancedInputLocalPlayerSubsystem, AddMappingContext
 #include "EnhancedInputComponent.h" // UEnhancedInputComponent, BindAction()
-#include "InputActionValue.h" // FInputActionValue
+
+#include "NinjaPlayerInputConfigDataAsset.h"
+
+#include "NinjaCharacter.h"
+
 #include "NinjaClearWidget.h"
 #include "NinjaGameInstance.h"
+
 #include "NinjaGameState.h"
 
-ANinjaBasePlayerController::ANinjaBasePlayerController() {
+
+ANinjaBasePlayerController::ANinjaBasePlayerController() 
+{
 }
 
 void ANinjaBasePlayerController::BeginPlay()
@@ -18,20 +25,120 @@ void ANinjaBasePlayerController::BeginPlay()
 	Super::BeginPlay();
 	
 	
-	
 	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
 	{		
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
 			LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 		{
-			if (InputMappingContext)
+			
+			if (NinjaPlayerInputConfigDataAsset && NinjaPlayerInputConfigDataAsset->InputMappingContext)
 			{
-				// 추후 Priority 세팅
-				Subsystem->AddMappingContext(InputMappingContext, 0);
+				Subsystem->AddMappingContext(NinjaPlayerInputConfigDataAsset->InputMappingContext, 0);
 			}
+
 		}
 	}
 }
+
+void ANinjaBasePlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+	
+		
+	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(InputComponent);
+	if (!EnhancedInput) return;
+	
+	if (!NinjaPlayerInputConfigDataAsset) return;
+	
+
+	if (NinjaPlayerInputConfigDataAsset->MoveAction)
+		EnhancedInput->BindAction(NinjaPlayerInputConfigDataAsset->MoveAction, ETriggerEvent::Triggered, this, &ANinjaBasePlayerController::HandleMove		);
+	if (NinjaPlayerInputConfigDataAsset->LookAction)
+		EnhancedInput->BindAction(NinjaPlayerInputConfigDataAsset->LookAction, ETriggerEvent::Triggered, this, &ANinjaBasePlayerController::HandleLook);
+	if (NinjaPlayerInputConfigDataAsset->JumpAction)
+	{
+		EnhancedInput->BindAction(
+			NinjaPlayerInputConfigDataAsset->JumpAction, 
+			ETriggerEvent::Triggered,
+			this,
+			&ANinjaBasePlayerController::HandleStartJump	
+		);                
+		
+		EnhancedInput->BindAction(
+			NinjaPlayerInputConfigDataAsset->JumpAction, 
+			ETriggerEvent::Completed,
+			this,
+			&ANinjaBasePlayerController::HandleStopJump	
+		);
+	}		
+	if (NinjaPlayerInputConfigDataAsset->WalkAction)
+	{		
+		EnhancedInput->BindAction(
+			NinjaPlayerInputConfigDataAsset->WalkAction,
+			ETriggerEvent::Triggered,                   
+			this, 
+			&ANinjaBasePlayerController::HandleStartWalk
+		);
+		
+		EnhancedInput->BindAction(
+			NinjaPlayerInputConfigDataAsset->WalkAction, 
+			ETriggerEvent::Completed, 
+			this, 
+			&ANinjaBasePlayerController::HandleStopWalk
+		);
+	}
+	
+	
+}
+
+void ANinjaBasePlayerController::HandleMove(const FInputActionValue& Value)
+{
+	ANinjaCharacter* ControlledCharacter  = Cast<ANinjaCharacter>(GetPawn());
+	if (!ControlledCharacter ) return;
+
+	ControlledCharacter ->Move(Value);
+}
+
+void ANinjaBasePlayerController::HandleStartJump(const FInputActionValue& Value)
+{
+	ANinjaCharacter* ControlledCharacter  = Cast<ANinjaCharacter>(GetPawn());
+	if (!ControlledCharacter ) return;
+
+	ControlledCharacter ->StartJump(Value);
+}
+
+void ANinjaBasePlayerController::HandleStopJump(const FInputActionValue& Value)
+{
+	ANinjaCharacter* ControlledCharacter  = Cast<ANinjaCharacter>(GetPawn());
+	if (!ControlledCharacter ) return;
+
+	ControlledCharacter ->StopJump(Value);
+}
+
+void ANinjaBasePlayerController::HandleLook(const FInputActionValue& Value)
+{
+	ANinjaCharacter* ControlledCharacter  = Cast<ANinjaCharacter>(GetPawn());
+	if (!ControlledCharacter ) return;
+
+	ControlledCharacter ->Look(Value);
+}
+
+void ANinjaBasePlayerController::HandleStartWalk(const FInputActionValue& Value)
+{
+	ANinjaCharacter* ControlledCharacter  = Cast<ANinjaCharacter>(GetPawn());
+	if (!ControlledCharacter ) return;
+
+	ControlledCharacter ->StartWalk(Value);
+}
+
+void ANinjaBasePlayerController::HandleStopWalk(const FInputActionValue& Value)
+{
+	ANinjaCharacter* ControlledCharacter  = Cast<ANinjaCharacter>(GetPawn());
+	if (!ControlledCharacter ) return;
+
+	ControlledCharacter ->StopWalk(Value);
+}
+
 
 void ANinjaBasePlayerController::TestClearUI() {
 }
