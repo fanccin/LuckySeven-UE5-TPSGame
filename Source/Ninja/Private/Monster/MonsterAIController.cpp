@@ -1,6 +1,6 @@
-#include "MonsterAIController.h"
+#include "Monster/MonsterAIController.h"
 
-#include "NinjaBaseMonster.h"
+#include "Monster/NinjaBaseMonster.h"
 #include "Kismet/GameplayStatics.h"
 
 

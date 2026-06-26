@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "KillVolume.h"
+#include "System/KillVolume.h"
 
-#include "NinjaGameState.h"
+#include "System/NinjaGameState.h"
 
 // Sets default values
 AKillVolume::AKillVolume()
