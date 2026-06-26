@@ -33,7 +33,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	class UNinjaPlayerInputConfigDataAsset* NinjaPlayerInputConfigDataAsset;
 	
-	
 	// 
 	UFUNCTION(BlueprintCallable, Category = "HUD")
 	virtual void ShowGameHUD(bool bIsNewScore);
