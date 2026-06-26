@@ -5,7 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h" 
-#include "NinjaCharacterController.h"
+
 #include "NinjaCharacterStatData.h"
 #include "NinjaGameState.h"
 
@@ -126,79 +126,11 @@ void ANinjaCharacter::BeginPlay()
 	
 }
 
-// === About Inputs & Control Actions ===
-// Called to bind functionality to input
+
+
 void ANinjaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
-	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	
-	if (!EnhancedInput) 
-		return;	
-	
-	if (ANinjaBasePlayerController* PlayerController = Cast<ANinjaBasePlayerController>(GetController()))
-	{
-        	// null check
-            if (PlayerController->MoveAction)
-            {
-                // IA_Move 액션 키를 "키를 누르고 있는 동안" Move() 호출
-                EnhancedInput->BindAction(
-                    PlayerController->MoveAction,
-                    ETriggerEvent::Triggered,
-                    this,
-                    &ANinjaCharacter::Move
-                );
-            }
-            
-            if (PlayerController->JumpAction)
-            {
-                // IA_Jump 액션 키를 "키를 누르고 있는 동안" StartJump() 호출
-                EnhancedInput->BindAction(
-                    PlayerController->JumpAction,
-                    ETriggerEvent::Triggered,
-                    this,
-                    &ANinjaCharacter::StartJump
-                );
-                
-                // IA_Jump 액션 키에서 "손을 뗀 순간" StopJump() 호출
-                EnhancedInput->BindAction(
-                    PlayerController->JumpAction,
-                    ETriggerEvent::Completed,
-                    this,
-                    &ANinjaCharacter::StopJump
-                );
-            }        	
-            
-            if (PlayerController->LookAction)
-            {
-                // IA_Look 액션 마우스가 "움직일 때" Look() 호출
-                EnhancedInput->BindAction(
-                    PlayerController->LookAction,
-                    ETriggerEvent::Triggered,
-                    this,
-                    &ANinjaCharacter::Look
-                );
-            }
-            
-            if (PlayerController->WalkAction)
-            {
-                // IA_Walk 액션 키를 "누르고 있는 동안" StartWalk() 호출
-                EnhancedInput->BindAction(
-                    PlayerController->WalkAction,
-                    ETriggerEvent::Triggered,                   
-                    this, 
-                    &ANinjaCharacter::StartWalk
-                );
-                // IA_Walk 액션 키에서 "손을 뗀 순간" StopWlak() 호출
-                EnhancedInput->BindAction(
-                    PlayerController->WalkAction, 
-                    ETriggerEvent::Completed, 
-                    this, 
-                    &ANinjaCharacter::StopWalk
-                );
-            }    
-        }
 	
 }
 
