@@ -33,4 +33,10 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category="Input|Actions")
 	class UInputAction* WalkAction;
+	
+	UPROPERTY(EditAnywhere, Category="Input|Actions")
+	class UInputAction* AttackAction;
+	
+	UPROPERTY(EditAnywhere, Category="Input|Actions")
+	class UInputAction* InteractionAction;
 };

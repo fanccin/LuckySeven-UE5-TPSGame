@@ -98,6 +98,10 @@ public:
 	void StartWalk(const FInputActionValue& value);
 	UFUNCTION()
 	void StopWalk(const FInputActionValue& value);
+	UFUNCTION()
+	void StartAttack(const FInputActionValue& value);
+	UFUNCTION()
+	void StartInteraction(const FInputActionValue& value);
 	
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void SetAirControl(float NewAirControl, float NewAirControlBoostMultiplier, float NewAirControlBoostVelocityThreshold, float NewFallingLateralFriction);
@@ -140,5 +144,6 @@ public:
 private:
 	void Initialize();
 	void InitializeCharacterStatsBasedOnDataTable();
+	void InitializeCharacterStatsWithOutDataTable();
 
 };
