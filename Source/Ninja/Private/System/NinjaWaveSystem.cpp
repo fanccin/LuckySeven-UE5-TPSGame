@@ -27,6 +27,7 @@ void ANinjaWaveSystem::StartWave()
 		{
 			int32 Count = WaveLevel[CurrentWave].SpawnCountPerSpawner[i];
 			MonsterSpawners[i]->SpawnMonsters(Count);
+			MonsterSpawners[i]->SetMonsterChase(true);
 			AllMonsterCount += Count;
 		}
 	}
