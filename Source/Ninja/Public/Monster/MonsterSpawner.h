@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "MonsterSpawner.generated.h"
 
+class ANinjaWaveSystem;
 class UBoxComponent;
 
 UCLASS()
@@ -38,12 +39,15 @@ protected:
 	TSubclassOf<ANinjaBaseMonster> MonsterClass;
 	UPROPERTY()
 	TArray<ANinjaBaseMonster*> MonsterPool;
-		
+	UPROPERTY()
+	ANinjaWaveSystem* WaveSystem;
+	
+	
 	FVector GetRandomPoint() const;
 	ANinjaBaseMonster* SpawnMonster(TSubclassOf<AActor> MonsterClass);
 	void InitPool();
 	
-	bool bChaseEnabel;
+	bool bChaseEnable;
 	
 	UFUNCTION(BlueprintCallable)
 	ANinjaBaseMonster* GetFromPool();
