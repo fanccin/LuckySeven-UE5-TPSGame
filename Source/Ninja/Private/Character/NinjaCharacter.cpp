@@ -37,37 +37,6 @@ void ANinjaCharacter::Initialize()
 	CameraComp->bUsePawnControlRotation = false;
 	
 	//bUseControllerRotationYaw = true;
-	
-	// = Basic Character Movement =
-	WalkSpeed = 500.0f; // temp value
-	SprintSpeedMultiplier = 2.0f; // temp value
-	SprintSpeed = WalkSpeed * SprintSpeedMultiplier;
-	
-	MoveComp->MaxWalkSpeed = SprintSpeed; // it's sprint is default
-	
-	// = Stats =	
-	MaxHealth = 100.0f;
-	Health = MaxHealth;
-	
-	// = Jump
-	JumpForce = 600.0f;
-	MoveComp->JumpZVelocity = JumpForce;
-	
-	// 공중 제어력 설정 (0.0 ~ 1.0 사이, 1.0은 지상과 동일한 제어력)
-	AirControl = 1.0f;
-	MoveComp->AirControl = AirControl;
-	
-	// 공중 제어 부스트 배율 설정 (점프 키 유지 시 제어력 증폭)
-	AirControlBoostMultiplier = 2.0f;
-	MoveComp->AirControlBoostMultiplier = AirControlBoostMultiplier;
-	
-	// 공중 제어 부스트가 발동할 속도 임계값
-	AirControlBoostVelocityThreshold = 25.0f;
-	MoveComp->AirControlBoostVelocityThreshold = AirControlBoostVelocityThreshold;
-	
-	// 공중 가로 마찰력 (값이 높을수록 공중에서 입력 중지 시 즉시 멈춤)
-	FallingLateralFriction = 0.5f;
-	MoveComp->FallingLateralFriction = FallingLateralFriction;
 }
 
 
@@ -111,6 +80,40 @@ void ANinjaCharacter::InitializeCharacterStatsBasedOnDataTable()
 	}
 	
 }
+void ANinjaCharacter::InitializeCharacterStatsWithOutDataTable()
+{
+	// = Basic Character Movement =
+	WalkSpeed = 500.0f; // temp value
+	SprintSpeedMultiplier = 2.0f; // temp value
+	SprintSpeed = WalkSpeed * SprintSpeedMultiplier;
+	
+	MoveComp->MaxWalkSpeed = SprintSpeed; // it's sprint is default
+	
+	// = Stats =	
+	MaxHealth = 100.0f;
+	Health = MaxHealth;
+	
+	// = Jump
+	JumpForce = 600.0f;
+	MoveComp->JumpZVelocity = JumpForce;
+	
+	// 공중 제어력 설정 (0.0 ~ 1.0 사이, 1.0은 지상과 동일한 제어력)
+	AirControl = 1.0f;
+	MoveComp->AirControl = AirControl;
+	
+	// 공중 제어 부스트 배율 설정 (점프 키 유지 시 제어력 증폭)
+	AirControlBoostMultiplier = 2.0f;
+	MoveComp->AirControlBoostMultiplier = AirControlBoostMultiplier;
+	
+	// 공중 제어 부스트가 발동할 속도 임계값
+	AirControlBoostVelocityThreshold = 25.0f;
+	MoveComp->AirControlBoostVelocityThreshold = AirControlBoostVelocityThreshold;
+	
+	// 공중 가로 마찰력 (값이 높을수록 공중에서 입력 중지 시 즉시 멈춤)
+	FallingLateralFriction = 0.5f;
+	MoveComp->FallingLateralFriction = FallingLateralFriction;
+	
+}
 
 // Called when the game starts or when spawned
 void ANinjaCharacter::BeginPlay()
@@ -119,8 +122,8 @@ void ANinjaCharacter::BeginPlay()
 	
 	if (CharacterStatDataTable)
 		InitializeCharacterStatsBasedOnDataTable();	
-	
-	
+	else
+		InitializeCharacterStatsWithOutDataTable();
 }
 
 
@@ -218,6 +221,25 @@ void ANinjaCharacter::StopWalk(const FInputActionValue& value)
 	}
 }
 
+void ANinjaCharacter::StartAttack(const FInputActionValue& value) {
+	// TODO 정준님 - 표창 투척 로직 추가 필요
+	GEngine->AddOnScreenDebugMessage(
+				-1,     // Key (-1이면 매번 새 메시지)
+				5.f,    // 표시 시간
+				FColor::Green,
+				TEXT("공격")
+			);
+}
+
+void ANinjaCharacter::StartInteraction(const FInputActionValue& value) {
+	// TODO 정준님 - 아이템 상호작용 로직 추가 필요
+	GEngine->AddOnScreenDebugMessage(
+				-1,     // Key (-1이면 매번 새 메시지)
+				5.f,    // 표시 시간
+				FColor::Green,
+				TEXT("상호작용")
+			);
+}
 
 // === Get Set ===
 
