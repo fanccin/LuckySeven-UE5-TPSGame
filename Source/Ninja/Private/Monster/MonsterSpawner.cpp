@@ -2,6 +2,7 @@
 
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "System/NinjaWaveSystem.h"
 
 AMonsterSpawner::AMonsterSpawner()
 {
@@ -18,7 +19,7 @@ AMonsterSpawner::AMonsterSpawner()
 
 void AMonsterSpawner::SetMonsterChase(bool Enable)
 {
-	bChaseEnabel= Enable;
+	bChaseEnable= Enable;
 	
 	for (auto* Monster : MonsterPool)
 	{
@@ -76,7 +77,7 @@ ANinjaBaseMonster* AMonsterSpawner::GetFromPool()
 				FRotator LookAt = FRotationMatrix::MakeFromX(Direction).Rotator();
 				Monster->SetActorLocationAndRotation(GetRandomPoint(),LookAt);
 				Monster->ActivateMonster(true);
-				Monster->SetChaseEnable(bChaseEnabel);
+				Monster->SetChaseEnable(bChaseEnable);
 				Monster->OwnerSpawner = this;
 				
 				return Monster;
@@ -92,6 +93,7 @@ void AMonsterSpawner::ReturnToPool(ANinjaBaseMonster* Monster)
 	{
 		Monster->ActivateMonster(false);
 		Monster->SetActorLocation(PoolLocation);
+		WaveSystem->OnMonsterDead();
 	}
 	
 }
