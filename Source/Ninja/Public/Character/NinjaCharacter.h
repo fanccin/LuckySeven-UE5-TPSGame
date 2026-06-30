@@ -21,11 +21,13 @@ UCLASS()
 class NINJA_API ANinjaCharacter : public ACharacter
 {
 	GENERATED_BODY()
+	
 
 public:
 	
 	// Sets default values for this character's properties
 	ANinjaCharacter();
+	virtual void Tick(float DeltaSeconds) override;
 	
 
 protected:
@@ -50,6 +52,8 @@ protected:
 	USpringArmComponent* SpringArmComp = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComp = nullptr;	
+	
+	FTimerHandle StaminaHandle;
 
 	
 	// === Variables ===		
@@ -82,6 +86,23 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat|Health")
 	float Health;	
 	
+	// Stamina
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float Stamina;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float MaxStamina;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float StaminaCoolTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float CurrentStaminaCoolTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float StaminaRecoveryPerSecond;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float StaminaEmptyRecoveryPerSecond;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float JumpStamina;
+	bool bIsStaminaEmpty;
+	bool bIsWalking;
 	
 
 public:		

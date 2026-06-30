@@ -14,11 +14,25 @@
 ANinjaCharacter::ANinjaCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	
 	Initialize();	
-	
 }
+
+void ANinjaCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	
+	if (CurrentStaminaCoolTime <= 0)
+	{
+		Stamina = FMath::Min(MaxStamina, Stamina + (bIsStaminaEmpty ? StaminaRecoveryPerSecond * DeltaSeconds * 1.5 : StaminaRecoveryPerSecond * DeltaSeconds));
+		if (Stamina >= MaxStamina)
+			bIsStaminaEmpty = false;
+	}
+	else
+		CurrentStaminaCoolTime -= DeltaSeconds;
+}
+
 void ANinjaCharacter::Initialize()
 {
 	MoveComp = GetCharacterMovement();
@@ -77,6 +91,15 @@ void ANinjaCharacter::InitializeCharacterStatsBasedOnDataTable()
 		Health = Data->Health;
 			
 		AttackDamage = Data->AttackDamage;
+		
+		// Stamina
+		Stamina = Data -> MaxStamina;
+		MaxStamina = Data -> MaxStamina;
+		StaminaCoolTime = Data -> StaminaCoolTime;
+		CurrentStaminaCoolTime = Data -> StaminaCoolTime;
+		StaminaRecoveryPerSecond = Data -> StaminaRecoveryPerSecond;
+		StaminaEmptyRecoveryPerSecond = Data -> StaminaEmptyRecoveryPerSecond;
+		JumpStamina = Data -> JumpStamina;
 	}
 	
 }
@@ -113,6 +136,16 @@ void ANinjaCharacter::InitializeCharacterStatsWithOutDataTable()
 	FallingLateralFriction = 0.5f;
 	MoveComp->FallingLateralFriction = FallingLateralFriction;
 	
+	
+	// Stamina
+	MaxStamina = 100.0f;
+	Stamina = MaxStamina;
+	StaminaCoolTime = 3.0f;
+	CurrentStaminaCoolTime = 0.f;
+	StaminaRecoveryPerSecond = 20.0f;
+	StaminaEmptyRecoveryPerSecond = 30.0f;
+	JumpStamina = 10;
+	
 }
 
 // Called when the game starts or when spawned
@@ -124,6 +157,21 @@ void ANinjaCharacter::BeginPlay()
 		InitializeCharacterStatsBasedOnDataTable();	
 	else
 		InitializeCharacterStatsWithOutDataTable();
+	
+	GetWorldTimerManager().SetTimer(
+		StaminaHandle,
+		[this]
+		{
+			GEngine->AddOnScreenDebugMessage(
+				-1,     // Key (-1이면 매번 새 메시지)
+				0.1f,    // 표시 시간
+				FColor::Green,
+				FString::Printf(TEXT("스태미너 : %.0f / %.0f"), this->Stamina, this->MaxStamina)
+			);
+		},
+		0.1f,
+		true);
+	
 }
 
 
@@ -156,7 +204,7 @@ void ANinjaCharacter::SetAirControl(float NewAirControl, float NewAirControlBoos
 
 void ANinjaCharacter::Move(const FInputActionValue& value)
 {
-	
+	if (bIsStaminaEmpty)	return;
 	if (!Controller) return;
 	
 	const FVector2D MoveInput = value.Get<FVector2D>();	
@@ -170,6 +218,9 @@ void ANinjaCharacter::Move(const FInputActionValue& value)
 	{
 		AddMovementInput(GetActorRightVector(), MoveInput.Y);
 	}
+	
+	if (!bIsWalking)
+		CurrentStaminaCoolTime = StaminaCoolTime;
 }
 
 void ANinjaCharacter::Look(const FInputActionValue& value)
@@ -183,12 +234,19 @@ void ANinjaCharacter::Look(const FInputActionValue& value)
 
 void ANinjaCharacter::StartJump(const FInputActionValue& value)
 {	
+	if (bIsStaminaEmpty)	return;
 	if (value.Get<bool>())
 	{
 		// 혹시라도 인게임중 점프 높이 변경이 없을 시 빼면 됩니다.
 		MoveComp->JumpZVelocity = JumpForce;
 		
-		Jump();
+		if (!GetCharacterMovement()->IsFalling())
+		{
+			Jump();
+			CurrentStaminaCoolTime = StaminaCoolTime;
+			Stamina = FMath::Max(0, Stamina - JumpStamina);
+			if (Stamina <= 0)	bIsStaminaEmpty = true;
+		}
 	}
 }
 void ANinjaCharacter::StopJump(const FInputActionValue& value)
@@ -206,6 +264,7 @@ void ANinjaCharacter::StartWalk(const FInputActionValue& value)
 	if (MoveComp)
 	{
 		MoveComp->MaxWalkSpeed = WalkSpeed;
+		bIsWalking = true;
 	}
 
 }
@@ -218,6 +277,7 @@ void ANinjaCharacter::StopWalk(const FInputActionValue& value)
 		SprintSpeed = WalkSpeed * SprintSpeedMultiplier;		
 		
 		MoveComp->MaxWalkSpeed = SprintSpeed;
+		bIsWalking = false;
 	}
 }
 

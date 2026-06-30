@@ -40,4 +40,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
 	float AttackDamage;
 	
+	// Stamina
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float MaxStamina;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float StaminaCoolTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float StaminaRecoveryPerSecond;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float StaminaEmptyRecoveryPerSecond;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat|Stamina")
+	float JumpStamina;
+	
 };
